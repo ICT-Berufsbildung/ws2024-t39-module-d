@@ -22,7 +22,7 @@ source "qemu" "lnx01" {
   memory = "2048"
   cpus = 2
 
-  headless = false
+  headless = true
   http_directory = "http"
   ssh_username = "sysop"
   ssh_password = "Skills39"
@@ -45,7 +45,7 @@ source "qemu" "lnx02" {
   memory = "2048"
   cpus = 2
 
-  headless = false
+  headless = true
   http_directory = "http"
   ssh_username = "sysop"
   ssh_password = "Skills39"
@@ -68,7 +68,7 @@ source "qemu" "partner01" {
   memory = "2048"
   cpus = 2
 
-  headless = false
+  headless = true
   http_directory = "http"
   ssh_username = "sysop"
   ssh_password = "Skills39"
@@ -91,7 +91,7 @@ source "qemu" "ws02" {
   memory = "2048"
   cpus = 2
 
-  headless = false
+  headless = true
   http_directory = "http"
   ssh_username = "sysop"
   ssh_password = "Skills39"

@@ -77,7 +77,7 @@ source "qemu" "win11-base" {
   format                   = "qcow2"
   headless                 = false
   net_device               = "virtio-net"
-  http_directory           = "."
+  http_directory           = "http"
   iso_url                  = var.win11_iso_url
   iso_checksum             = var.win11_iso_checksum
   shutdown_command         = "shutdown /s /t 0 /f /d p:4:1 /c \"Packer Shutdown\""

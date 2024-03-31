@@ -73,18 +73,6 @@ $account = [ADSI]'WinNT://./Administrator'
 $account.Userflags = $AdsNormalAccount -bor $AdsDontExpirePassword -bor $AdsAccountDisable
 $account.SetInfo()
 
-Write-Host 'Disabling Automatic Private IP Addressing (APIPA)...'
-Set-ItemProperty `
-    -Path 'HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters' `
-    -Name IPAutoconfigurationEnabled `
-    -Value 0
-
-Write-Host 'Disabling IPv6...'
-Set-ItemProperty `
-    -Path 'HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip6\Parameters' `
-    -Name DisabledComponents `
-    -Value 0xff
-
 Write-Host 'Disabling hibernation...'
 powercfg /hibernate off
 

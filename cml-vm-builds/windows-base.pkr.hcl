@@ -38,7 +38,6 @@ source "qemu" "win11-base" {
     ["-device", "virtio-tablet"],
     ["-device", "virtio-scsi-pci,id=scsi0"],
     ["-device", "scsi-hd,bus=scsi0.0,drive=drive0"],
-    ["-device", "virtio-net,netdev=user.0"],
     ["-vga", "qxl"],
     ["-device", "virtio-serial-pci"],
     ["-chardev", "socket,path=/tmp/{{ .Name }}-qga.sock,server,nowait,id=qga0"],
@@ -76,7 +75,7 @@ source "qemu" "win11-base" {
   ]
   format                   = "qcow2"
   headless                 = false
-  net_device               = "virtio-net"
+  net_device               = "e1000"
   http_directory           = "http"
   iso_url                  = var.win11_iso_url
   iso_checksum             = var.win11_iso_checksum
@@ -99,7 +98,6 @@ source "qemu" "winsrv-base" {
     ["-device", "virtio-tablet"],
     ["-device", "virtio-scsi-pci,id=scsi0"],
     ["-device", "scsi-hd,bus=scsi0.0,drive=drive0"],
-    ["-device", "virtio-net,netdev=user.0"],
     ["-vga", "qxl"],
     ["-device", "virtio-serial-pci"],
     ["-chardev", "socket,path=/tmp/{{ .Name }}-qga.sock,server,nowait,id=qga0"],
@@ -137,8 +135,8 @@ source "qemu" "winsrv-base" {
   ]
   format                   = "qcow2"
   headless                 = false
-  net_device               = "virtio-net"
-  http_directory           = "."
+  net_device               = "e1000"
+  http_directory           = "http"
   iso_url                  = var.winsrv_iso_url
   iso_checksum             = var.winsrv_iso_checksum
   shutdown_command         = "shutdown /s /t 0 /f /d p:4:1 /c \"Packer Shutdown\""

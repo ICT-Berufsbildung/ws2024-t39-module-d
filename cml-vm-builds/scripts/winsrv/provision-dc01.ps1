@@ -1,6 +1,6 @@
 Import-Module ActiveDirectory
 
-Set-ADDefaultDomainPasswordPolicy -ComplexityEnabled $False -MinPasswordLength 4
+Set-ADDefaultDomainPasswordPolicy -Identity wsc2024.local -ComplexityEnabled $False -MinPasswordLength 4
 
 
 New-ADOrganizationalUnit -Name "HQ" -Path "DC=wsc2024,DC=local"
@@ -37,7 +37,8 @@ $users = @('Rooney Dominguez',
 Write-Host "Create users"
 foreach ($u in $users){
     $item = $u.Split(" ")
-    New-ADUser -Name $u -SamAccountName $item[1].ToLower() -AccountPassword (ConvertTo-SecureString "Skills39" -AsPlainText -Force) -Enable $true
+    $username = $item[1].ToLower()
+    New-ADUser -Name $u -SamAccountName $username -UserPrincipalName "$username@wsc2024.local" -AccountPassword (ConvertTo-SecureString "Skills39" -AsPlainText -Force) -Enable $true
 }
 
 foreach ($group in @('Marketing', 'IT', 'Finance')) {
@@ -53,6 +54,11 @@ New-ADGroup -Name "DL-FS_Finance-RO" -SamAccountName "DL-FS_Finance-RO" -GroupCa
 
 
 Add-ADGroupMember -Identity "DL-FS_Finance-RW" -Members GL-Finance
+
+Write-Host "Create GPO"
+$gpo = New-GPO -Name "WSC2024_DO_NOT_ALLOW_REGEDIT"
+Set-GPRegistryValue -Name "WSC2024_DO_NOT_ALLOW_REGEDIT" -Key "HKCU\Software\Microsoft\Windows\CurrentVersion\Policies\System" -ValueName DisableRegistryTools -Type DWord -Value 2
+New-GPLink -Guid $gpo.Id -Target "OU=Computers,OU=Finance,OU=HQ,DC=wsc2024,DC=local" -LinkEnabled Yes -Order 1
 
 Write-Host "Create DNS reverse zones"
 Add-DnsServerPrimaryZone -NetworkID "10.1.64.0/24" -ReplicationScope "Forest"
@@ -73,4 +79,26 @@ Add-DnsServerResourceRecordAAAA -Name "lnx02" -ZoneName "wsc2024.local" -AllowUp
 Write-Host "Create new share"
 New-Item -Path 'c:\Share' -ItemType Directory
 New-Item -Path 'c:\Share\IT' -ItemType Directory
-New-SMBShare –Name IT-Departement –Path 'c:\Share\IT' –FullAccess Everyone
+$folder = 'c:\Share\IT'
+New-SMBShare –Name IT-Departement –Path $folder –FullAccess Everyone -FolderEnumerationMode "AccessBased"
+
+Write-Host "Set file permissions"
+$acl = Get-Acl -Path $folder
+$everyone = New-Object System.Security.Principal.NTAccount("Everyone")
+# Define Full Control Group
+$fcRule = New-Object System.Security.AccessControl.FileSystemAccessRule("WSC2024\GL-IT","FullControl","ContainerInherit,ObjectInherit","None","Allow")
+# Define Modify Group
+$mdRule = New-Object System.Security.AccessControl.FileSystemAccessRule("WSC2024\DL-FS_Finance-RW","Modify","ContainerInherit,ObjectInherit","None","Allow")
+# Define Read Only Group
+$roRule = New-Object System.Security.AccessControl.FileSystemAccessRule("WSC2024\DL-FS_Finance-RO","ReadAndExecute","ContainerInherit,ObjectInherit","None","Allow")
+# Disable Inheritance
+$acl.SetAccessRuleProtection($true,$false)
+$acl.PurgeAccessRules($everyone)
+# Add Full Control Rule
+$acl.SetAccessRule($fcRule)
+# Add Modify Rule
+$acl.SetAccessRule($mdRule)
+# Add Read Only Rule
+$acl.SetAccessRule($roRule)
+
+Set-Acl -Path $folder -AclObject $acl

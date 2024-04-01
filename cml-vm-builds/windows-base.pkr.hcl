@@ -76,7 +76,7 @@ source "qemu" "win11-base" {
   format                   = "qcow2"
   headless                 = false
   net_device               = "e1000"
-  http_directory           = "http"
+  http_directory           = "."
   iso_url                  = var.win11_iso_url
   iso_checksum             = var.win11_iso_checksum
   shutdown_command         = "shutdown /s /t 0 /f /d p:4:1 /c \"Packer Shutdown\""
@@ -136,7 +136,7 @@ source "qemu" "winsrv-base" {
   format                   = "qcow2"
   headless                 = false
   net_device               = "e1000"
-  http_directory           = "http"
+  http_directory           = "."
   iso_url                  = var.winsrv_iso_url
   iso_checksum             = var.winsrv_iso_checksum
   shutdown_command         = "shutdown /s /t 0 /f /d p:4:1 /c \"Packer Shutdown\""
@@ -159,6 +159,11 @@ build {
   provisioner "powershell" {
     use_pwsh = true
     script   = "scripts/win11/disable-windows-defender.ps1"
+  }
+
+  provisioner "powershell" {
+    use_pwsh = true
+    script   = "scripts/win11/provision-guest-tools-qemu-kvm.ps1"
   }
 
   provisioner "powershell" {

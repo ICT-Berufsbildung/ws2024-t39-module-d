@@ -1,18 +1,23 @@
 
 Write-Host "Prepare domain join"
 $principal = New-ScheduledTaskPrincipal -UserId "NT AUTHORITY\SYSTEM" -LogonType ServiceAccount -RunLevel Highest
-$trigger = New-JobTrigger -AtStartup
+$trigger = New-JobTrigger -AtStartup -RandomDelay 00:01:00
 $options = New-ScheduledJobOption -StartIfOnBattery -RunElevated
 $psJobsPathInScheduler = "\";
 Register-ScheduledJob -Name "WSC2024_DOMAINJOIN" -Trigger $trigger -ScriptBlock {    
-    if ((gwmi win32_computersystem).partofdomain -eq $false) {
+    # Pause for 5 seconds per loop
+    while ((gwmi win32_computersystem).partofdomain -eq $false) {   
         $password = "Skills39" | ConvertTo-SecureString -asPlainText -Force
         $username = "WSC2024\sysop" 
         $credential = New-Object System.Management.Automation.PSCredential($username,$password)
-        Add-Computer -DomainName "wsc2024.local" -Credential $credential -Restart -OUPath "OU=Computers,OU=Finance,OU=HQ,DC=wsc2024,DC=local"
-    } else {
-        Unregister-ScheduledTask -TaskName "WSC2024_DOMAINJOIN" -Confirm:$false
+        try {
+            Add-Computer -DomainName "wsc2024.local" -Credential $credential -Restart -OUPath "OU=Computers,OU=Finance,OU=HQ,DC=wsc2024,DC=local" -ErrorAction Stop
+        } catch {
+            # Sleep 15 seconds
+            Start-Sleep -s 15
+        }
     }
+    Unregister-ScheduledTask -TaskName "WSC2024_DOMAINJOIN" -Confirm:$false
 }
 $psJobsPathInScheduler = "\Microsoft\Windows\PowerShell\ScheduledJobs";
 $settings = New-ScheduledTaskSettingsSet

@@ -93,13 +93,19 @@ EOF
 cat >/etc/dhcp/dhcpd.conf <<'EOF'
 default-lease-time 600;
 max-lease-time 7200;
-    
+authorative;
+subnet 10.1.64.0 netmask 255.255.255.0 {}
+
 subnet 10.1.0.0 netmask 255.255.254.0 {
  range 10.1.0.100 10.1.1.200;
  option routers 10.1.0.1;
- option domain-name-servers 10.1.0.11;
+ option domain-name-servers 10.1.64.20;
  option domain-name "wsc2024.local";
 }
+EOF
+
+cat >/etc/default/isc-dhcp-server <<EOF
+INTERFACESv4="$ifname"
 EOF
 
 # Deploy network interface configuration

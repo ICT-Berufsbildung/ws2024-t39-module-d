@@ -1,7 +1,7 @@
 
 Write-Host "Set static IP"
 $principal = New-ScheduledTaskPrincipal -UserId "NT AUTHORITY\SYSTEM" -LogonType ServiceAccount -RunLevel Highest
-$trigger = New-JobTrigger -AtStartup
+$trigger = New-JobTrigger -AtStartup -RandomDelay 00:01:00
 $options = New-ScheduledJobOption -StartIfOnBattery -RunElevated
 $psJobsPathInScheduler = "\";
 Register-ScheduledJob -Name "WSC2024_NETCFG" -Trigger $trigger -ScriptBlock {    

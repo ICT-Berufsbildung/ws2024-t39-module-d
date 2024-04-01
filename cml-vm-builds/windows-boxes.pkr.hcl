@@ -96,8 +96,13 @@ build {
     inline = ["Rename-Computer -NewName dc01"]
   }
 
+  provisioner "powershell" {
+    only   = ["qemu.ws01"]
+    use_pwsh = true
+    inline = ["Rename-Computer -NewName ws01"]
+  }
+
   provisioner "windows-restart" {
-    only   = ["qemu.dc01"]
   }
 
   provisioner "powershell" {

@@ -5,7 +5,7 @@ IFS=$'\n\t'
 ifname=$(ip route get 8.8.8.8 | sed -n 's/.*dev \([^\ ]*\).*/\1/p')
 
 groupadd -g 2000 wsc2024
-useradd -u 2000 -g wsc2024 -d /home/wsc2024 -m -s /bin/false wsc2024
+useradd -u 2000 -g wsc2024 -d /home/wsc2024 -m -s /usr/sbin/nologin wsc2024
 echo 'wsc2024:Skills39' | chpasswd
 
 # Install required packages unattended
@@ -78,3 +78,4 @@ chmod 444 /home/wsc2024/customers.csv
 
 sed -Ei 's/#?\s*(ServerName)\s+.*$/\1 "Your Partner - Share"/g' /etc/proftpd/proftpd.conf
 sed -Ei 's/#?\s*(DefaultRoot).*$/\1 ~/g' /etc/proftpd/proftpd.conf
+sed -Ei 's/#?\s*(RequireValidShell).*$/\1 off/g' /etc/proftpd/proftpd.conf

@@ -33,7 +33,7 @@ source "qemu" "dc01" {
   disk_cache     = "unsafe"
   disk_discard   = "unmap"
   format                   = "qcow2"
-  headless                 = false
+  headless                 = true
   net_device               = "e1000"
   http_directory           = "http"
   iso_url                  = "output-winsrv-base/packer-winsrv-base"
@@ -72,7 +72,7 @@ source "qemu" "ws01" {
   disk_cache     = "unsafe"
   disk_discard   = "unmap"
   format                   = "qcow2"
-  headless                 = false
+  headless                 = true
   net_device               = "e1000"
   http_directory           = "http"
   iso_url                  = "output-win11-base/packer-win11-base"

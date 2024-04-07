@@ -18,7 +18,9 @@ apt-get install -qqy \
   apache2 \
   apache2-doc \
   xfce4 \
-  xfce4-terminal
+  xfce4-terminal \
+  firefox-esr \
+  mousepad
 
 
 # Enable auto-login on tty1
@@ -28,6 +30,12 @@ cat >/etc/systemd/system/getty@tty1.service.d/override.conf <<'EOF'
 ExecStart=
 ExecStart=-/sbin/agetty -o '-p -f -- \\u' --autologin peter --noclear %I $TERM
 EOF
+
+cat >/home/peter/.bash_profile <<'EOF'
+startxfce4
+EOF
+chown peter:peter /home/peter/.bash_profile
+chmod +x /home/peter/.bash_profile
 
 # Use multi-user target by default
 systemctl set-default multi-user.target

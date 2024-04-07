@@ -49,6 +49,8 @@ ff02::2   ip6-allrouters
 
 10.1.64.10 lnx01.wsc2024.org lnx01
 2001:db8:cafe:200::10 lnx01.wsc2024.org lnx01
+2001:AB12:10::10 partner01.your-partner.com
+31.22.11.32 partner01.your-partner.com
 EOF
 
 
@@ -107,6 +109,38 @@ EOF
 cat >/etc/default/isc-dhcp-server <<EOF
 INTERFACESv4="$ifname"
 EOF
+
+# FTP sync
+mkdir /opt/customers-sync
+mkdir /data
+cat >/opt/customers-sync/sync.sh <<EOF
+#!/bin/bash
+wget -P /data ftp://wsc2024:Skills39@partner01.your-partner.com/customers.csv
+EOF
+
+chmod +x /opt/customers-sync/sync.sh
+
+cat >/etc/systemd/system/partner-sync.service <<EOF
+[Unit]
+Description=Your-Partner.com Sync job
+
+[Service]
+Type=oneshot
+ExecStart=/bin/bash /opt/customers-sync/sync.sh
+EOF
+
+cat >/etc/systemd/system/partner-sync.timer <<EOF
+[Unit]
+Description=Your-Partner.com Sync job timer
+
+[Timer]
+OnCalendar=*:0/15
+
+[Install]
+WantedBy=timers.target
+EOF
+
+systemctl enable partner-sync.timer
 
 # Deploy network interface configuration
 cat >/etc/network/interfaces <<EOF

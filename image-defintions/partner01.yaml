@@ -1,0 +1,8 @@
+id: partner01
+node_definition_id: partner01
+description: ''
+label: partner01
+disk_image: wsc2024-mod-d-partner01.qcow2
+read_only: false
+disk_subfolder: partner01
+schema_version: 0.0.1

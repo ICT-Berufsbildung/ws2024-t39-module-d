@@ -1,0 +1,8 @@
+id: ws01
+node_definition_id: ws01
+description: ''
+label: ws01
+disk_image: wsc2024-mod-d-ws01.qcow2
+read_only: false
+disk_subfolder: ws01
+schema_version: 0.0.1

@@ -1,0 +1,8 @@
+id: lnx01
+node_definition_id: lnx01
+description: ''
+label: lnx01
+disk_image: wsc2024-mod-d-lnx01.qcow2
+read_only: false
+disk_subfolder: lnx01
+schema_version: 0.0.1

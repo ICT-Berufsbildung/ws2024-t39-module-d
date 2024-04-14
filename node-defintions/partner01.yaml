@@ -1,0 +1,48 @@
+id: partner01
+general:
+  description: partner01
+  nature: server
+  read_only: false
+device:
+  interfaces:
+    has_loopback_zero: false
+    physical:
+      - Ethernet0
+    serial_ports: 1
+    default_count: 1
+ui:
+  visible: true
+  label_prefix: partner01-
+  icon: server
+  label: partner01
+sim:
+  linux_native:
+    libvirt_domain_driver: kvm
+    driver: server
+    disk_driver: virtio
+    ram: 1024
+    cpus: 1
+    cpu_limit: 100
+    nic_driver: e1000
+    video:
+      model: virtio
+      memory: 16
+boot:
+  timeout: 60
+inherited:
+  image:
+    ram: true
+    cpus: true
+    cpu_limit: true
+    data_volume: true
+    boot_disk_size: true
+  node:
+    ram: true
+    cpus: true
+    cpu_limit: true
+    data_volume: true
+    boot_disk_size: true
+configuration:
+  generator:
+    driver: null
+schema_version: 0.0.1

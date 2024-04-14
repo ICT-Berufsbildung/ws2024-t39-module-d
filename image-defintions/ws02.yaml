@@ -1,0 +1,8 @@
+id: ws02
+node_definition_id: ws02
+description: ''
+label: ws02
+disk_image: wsc2024-mod-d-ws02.qcow2
+read_only: false
+disk_subfolder: ws02
+schema_version: 0.0.1

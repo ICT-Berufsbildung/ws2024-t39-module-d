@@ -1,0 +1,8 @@
+id: dc01
+node_definition_id: dc01
+description: ''
+label: dc01
+disk_image: wsc2024-mod-d-dc01.qcow2
+read_only: false
+disk_subfolder: dc01
+schema_version: 0.0.1

@@ -45,6 +45,10 @@ EOF
 # Disable delay after incorrect PAM authentication
 sed -i '/pam_unix.so/ s/$/ nodelay/g' /etc/pam.d/common-auth
 
+# Increase boot timeout
+sed -Ei 's/#?\s*(GRUB_TIMEOUT)\s+.*$/\1 30/g' /etc/default/grub
+update-grub
+
 # Deploy network interface configuration
 cat >/etc/network/interfaces <<EOF
 # Loopback

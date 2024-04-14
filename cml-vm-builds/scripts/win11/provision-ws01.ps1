@@ -23,3 +23,10 @@ $psJobsPathInScheduler = "\Microsoft\Windows\PowerShell\ScheduledJobs";
 $settings = New-ScheduledTaskSettingsSet
 $settings.Priority = 4
 Set-ScheduledTask -TaskPath $psJobsPathInScheduler -TaskName "WSC2024_DOMAINJOIN" -Principal $principal -Settings $settings
+
+# Break pwsh path
+$removePath = 'C:\Program Files\Powershell\7\'
+$addPath = 'C:\Program Files\Powershell\asdf\'
+$regexRemovePath = [regex]::Escape($removePath)
+$arrPath = $env:Path -split ';' | Where-Object {$_ -notMatch "^$regexRemovePath\\?"}
+[System.Environment]::SetEnvironmentVariable('Path',(($arrPath + $addPath) -join ';'), 'Machine')

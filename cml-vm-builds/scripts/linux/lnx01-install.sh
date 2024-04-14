@@ -63,6 +63,21 @@ EOF
 # Overwrite default Apache page for compact output
 echo 'Welcome to WSC2024.org' >/var/www/html/index.html
 
+
+echo 'Welcome to Secret app at WSC2024.org' >/var/www/secret/index.html
+cat >/etc/apache2/sites-available/secret.conf <<'EOF'
+<VirtualHost *:8080>
+    ServerName www.wsc2024.org
+    DocumentRoot /var/www/secret/
+
+    <Directory /var/www/secret>
+        Options -Indexes +FollowSymLinks
+        AllowOverride All
+    </Directory>
+</VirtualHost>
+EOF
+a2ensite secret
+
 # Use local BIND9 as system resolver
 cat >/etc/resolv.conf <<'EOF'
 domain wsc2024.org
@@ -72,6 +87,13 @@ EOF
 
 # Disable delay after incorrect PAM authentication
 sed -i '/pam_unix.so/ s/$/ nodelay/g' /etc/pam.d/common-auth
+
+cat >>/etc/bind/named.conf.local <<'EOF'
+zone "wsc2024.org" {
+    type master;
+    file "db.wsc2024.org";
+};
+EOF
 
 # Create zonefile for wsc2024.org
 cat >/etc/bind/db.wsc2024.org <<'EOF'

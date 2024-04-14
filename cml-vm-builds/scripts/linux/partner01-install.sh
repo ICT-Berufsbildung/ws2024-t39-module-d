@@ -18,6 +18,8 @@ apt-get install -qqy \
   apache2-doc \
   proftpd \
   proftpd-doc \
+  bind9 \
+  bind9-doc \
   wget
 
 # Configure hostname and hosts
@@ -50,6 +52,32 @@ nameserver 127.0.0.1
 nameserver ::1
 EOF
 
+cat >>/etc/bind/named.conf.local <<'EOF'
+zone "." {
+    type master;
+    file "db.root";
+};
+EOF
+
+# Create zonefile for wsc2024.org
+cat >/etc/bind/db.root <<'EOF'
+$TTL 3600
+@ IN SOA ns1.root. tech.root. (
+  1
+  604800
+  86400
+  2419200
+  3600
+)
+@ IN NS ns1.root.
+@ IN A 10.1.64.10
+@ IN AAAA 2001:db8:cafe:200::10
+ns1.root. IN A 9.9.9.9
+partner01.your-partner.com. IN A 31.22.11.32 
+partner01.your-partner.com. IN AAAA 2001:AB12:10::10
+www.msftconnecttest.com. IN A 9.9.9.9
+EOF
+
 # Disable delay after incorrect PAM authentication
 sed -i '/pam_unix.so/ s/$/ nodelay/g' /etc/pam.d/common-auth
 
@@ -70,6 +98,8 @@ iface $ifname inet6 static
   address 2001:AB12:10::10
   netmask 64
   accept_ra 1
+  up ip addr add 2001:AB12:10::ef/64 dev $ifname
+  down ip addr del 2001:AB12:10::ef/64 dev $ifname
 EOF
 
 wget -P /home/wsc2024 http://$PACKER_HTTP_ADDR/customers.csv

@@ -52,13 +52,17 @@ Add-ADGroupMember -Identity GL-Finance -Members french,hull,carter,dominguez
 New-ADGroup -Name "DL-FS_Finance-RW" -SamAccountName "DL-FS_Finance-RW" -GroupCategory Security -GroupScope DomainLocal -Path "OU=Groups,OU=HQ,DC=wsc2024,DC=local"
 New-ADGroup -Name "DL-FS_Finance-RO" -SamAccountName "DL-FS_Finance-RO" -GroupCategory Security -GroupScope DomainLocal -Path "OU=Groups,OU=HQ,DC=wsc2024,DC=local"
 
+New-ADGroup -Name "DL-FS_Marketing-RW" -SamAccountName "DL-FS_Marketing-RW" -GroupCategory Security -GroupScope DomainLocal -Path "OU=Groups,OU=HQ,DC=wsc2024,DC=local"
+New-ADGroup -Name "DL-FS_Marketing-RO" -SamAccountName "DL-FS_Marketing-RO" -GroupCategory Security -GroupScope DomainLocal -Path "OU=Groups,OU=HQ,DC=wsc2024,DC=local"
 
-Add-ADGroupMember -Identity "DL-FS_Finance-RW" -Members GL-Finance
+Add-ADGroupMember -Identity "DL-FS_Marketing-RW" -Members GL-Marketing
 
 Write-Host "Create GPO"
 $gpo = New-GPO -Name "WSC2024_DO_NOT_ALLOW_REGEDIT"
 Set-GPRegistryValue -Name "WSC2024_DO_NOT_ALLOW_REGEDIT" -Key "HKCU\Software\Microsoft\Windows\CurrentVersion\Policies\System" -ValueName DisableRegistryTools -Type DWord -Value 2
-New-GPLink -Guid $gpo.Id -Target "OU=Computers,OU=Finance,OU=HQ,DC=wsc2024,DC=local" -LinkEnabled Yes -Order 1
+New-GPLink -Guid $gpo.Id -Target "DC=wsc2024,DC=local" -LinkEnabled Yes -Order 1
+Set-GPPermissions -Name "WSC2024_DO_NOT_ALLOW_REGEDIT" -TargetName "GL-Marketing" -PermissionLevel GpoApply -TargetType 'Group'
+dsacls "cn={$($gpo.id)},cn=policies,$((Get-ADDomain).SystemsContainer)" /R "Authenticated Users"
 
 Write-Host "Create DNS reverse zones"
 Add-DnsServerPrimaryZone -NetworkID "10.1.64.0/24" -ReplicationScope "Forest"
@@ -76,14 +80,22 @@ Add-DnsServerResourceRecordCName -Name "www" -HostNameAlias "lnx01.wsc2024.local
 Add-DnsServerResourceRecordAAAA -Name "lnx01" -ZoneName "wsc2024.local" -AllowUpdateAny -IPv6Address "2001:db8:cafe:200::10" -CreatePtr
 Add-DnsServerResourceRecordAAAA -Name "lnx02" -ZoneName "wsc2024.local" -AllowUpdateAny -IPv6Address "2001:db8:cafe:200::11" -CreatePtr
 
+Add-DnsServerConditionalForwarderZone -Name "wsc2024.org" -ReplicationScope "Forest" -MasterServers 2001:db8:cafe:200::10,10.1.64.10
+(Get-DnsServerForwarder).IPAddress | foreach { Remove-DnsServerForwarder -IPAddress $_ -Force -Confirm:$false}
+Add-DnsServerForwarder -IPAddress 2001:AB12:10::ef,9.9.9.9
+
 Write-Host "Create new share"
 New-Item -Path 'c:\Share' -ItemType Directory
-New-Item -Path 'c:\Share\IT' -ItemType Directory
-$folder = 'c:\Share\IT'
-New-SMBShare –Name IT-Departement –Path $folder –FullAccess Everyone -FolderEnumerationMode "AccessBased"
+$financeFolder = 'c:\Share\Finance'
+$marketingFolder = 'c:\Share\Marketing'
+New-Item -Path $financeFolder -ItemType Directory
+New-Item -Path $marketingFolder -ItemType Directory
+
+New-SMBShare –Name Finance –Path $financeFolder –FullAccess Everyone -FolderEnumerationMode "AccessBased"
+New-SMBShare –Name Marketing –Path $marketingFolder –FullAccess Everyone -FolderEnumerationMode "AccessBased"
 
 Write-Host "Set file permissions"
-$acl = Get-Acl -Path $folder
+$acl = Get-Acl -Path $financeFolder
 $everyone = New-Object System.Security.Principal.NTAccount("Everyone")
 # Define Full Control Group
 $fcRule = New-Object System.Security.AccessControl.FileSystemAccessRule("WSC2024\GL-IT","FullControl","ContainerInherit,ObjectInherit","None","Allow")
@@ -101,4 +113,29 @@ $acl.SetAccessRule($mdRule)
 # Add Read Only Rule
 $acl.SetAccessRule($roRule)
 
-Set-Acl -Path $folder -AclObject $acl
+Set-Acl -Path $financeFolder -AclObject $acl
+
+Write-Host "Set file permissions"
+$acl = Get-Acl -Path $marketingFolder
+$everyone = New-Object System.Security.Principal.NTAccount("Everyone")
+# Define Full Control Group
+$fcRule = New-Object System.Security.AccessControl.FileSystemAccessRule("WSC2024\GL-IT","FullControl","ContainerInherit,ObjectInherit","None","Allow")
+# Define Modify Group
+$mdRule = New-Object System.Security.AccessControl.FileSystemAccessRule("WSC2024\DL-FS_Marketing-RW","Modify","ContainerInherit,ObjectInherit","None","Allow")
+# Define Read Only Group
+$roRule = New-Object System.Security.AccessControl.FileSystemAccessRule("WSC2024\DL-FS_Marketing-RO","ReadAndExecute","ContainerInherit,ObjectInherit","None","Allow")
+# Disable Inheritance
+$acl.SetAccessRuleProtection($true,$false)
+$acl.PurgeAccessRules($everyone)
+# Add Full Control Rule
+$acl.SetAccessRule($fcRule)
+# Add Modify Rule
+$acl.SetAccessRule($mdRule)
+# Add Read Only Rule
+$acl.SetAccessRule($roRule)
+
+Set-Acl -Path $marketingFolder -AclObject $acl
+
+# Block CSV file
+New-FsrmFileGroup -Name "WSC2024_Blacklist" -IncludePattern @("*.csv", "*.html")
+New-FsrmFileScreen -Path $marketingFolder -IncludeGroup "WSC2024_Blacklist" -Active

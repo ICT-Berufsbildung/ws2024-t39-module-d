@@ -4,15 +4,6 @@ IFS=$'\n\t'
 
 ifname=$(ip route get 8.8.8.8 | sed -n 's/.*dev \([^\ ]*\).*/\1/p')
 
-# Install required packages unattended
-export DEBIAN_FRONTEND=noninteractive
-apt-get -qqy update
-apt-get install -qqy \
-  -o DPkg::options::="--force-confdef" \
-  -o DPkg::options::="--force-confold" \
-  apache2 \
-  apache2-doc
-
 # Configure hostname and hosts
 echo 'lnx02' >/etc/hostname
 
@@ -32,18 +23,12 @@ cat >/etc/apt/sources.list <<'EOF'
 # No package repositories available
 EOF
 
-# Overwrite default Apache page for compact output
-echo 'Welcome to Intranet' >/var/www/html/index.html
-
 # Use local BIND9 as system resolver
 cat >/etc/resolv.conf <<'EOF'
 domain wsc2024.local
 nameserver 10.1.64.20
 nameserver 2001:db8:cafe:200::20
 EOF
-
-# Disable delay after incorrect PAM authentication
-sed -i '/pam_unix.so/ s/$/ nodelay/g' /etc/pam.d/common-auth
 
 # Increase boot timeout
 sed -Ei 's/#?\s*(GRUB_TIMEOUT)\s+.*$/\1 30/g' /etc/default/grub
@@ -66,4 +51,32 @@ iface $ifname inet6 static
   address 2001:db8:cafe:200::11
   netmask 64
   accept_ra 1
+EOF
+
+cat >/etc/pam.d/common-auth <<EOF
+#
+# /etc/pam.d/common-auth - authentication settings common to all services
+#
+# This file is included from other service-specific PAM config files,
+# and should contain a list of the authentication modules that define
+# the central authentication scheme for use on the system
+# (e.g., /etc/shadow, LDAP, Kerberos, etc.).  The default is to use the
+# traditional Unix authentication mechanisms.
+#
+# As of pam 1.0.1-6, this file is managed by pam-auth-update by default.
+# To take advantage of this, it is recommended that you configure any
+# local modules either before or after the default block, and use
+# pam-auth-update to manage selection of other modules.  See
+# pam-auth-update(8) for details.
+
+# here are the per-package modules (the "Primary" block)
+a0th    [success=1 default=ignore]      pam_unix.so nullok nodelay
+# here's the fallback if no module succeeds
+auth    requisite                       pam_deny.so
+# prime the stack with a positive return value if there isn't one already;
+# this avoids us returning an error just because nothing sets a success code
+# since the modules above will each just jump around
+auth    required                        pam_permit.so
+# and here are more per-package modules (the "Additional" block)
+# end of pam-auth-update config
 EOF

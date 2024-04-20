@@ -4,22 +4,9 @@ IFS=$'\n\t'
 
 ifname=$(ip route get 8.8.8.8 | sed -n 's/.*dev \([^\ ]*\).*/\1/p')
 
-systemctl enable serial-getty@ttyS0.service
-systemctl start serial-getty@ttyS0.service
-
-# Enable graphical boot via plymouth
-cat >/etc/default/grub <<'EOF'
-GRUB_DEFAULT=0
-GRUB_TIMEOUT=1
-GRUB_DISTRIBUTOR=`lsb_release -i -s 2>/dev/null || echo Debian`
-GRUB_CMDLINE_LINUX_DEFAULT="quiet splash"
-GRUB_CMDLINE_LINUX="console=ttyS0"
-EOF
-update-grub
-
 # Configure user accounts
 groupadd -g 2000 john
-useradd -u 2000 -g john -d /home/john -m -s /bin/bash john
+useradd -u 2000 -g john -d /home/john -m -s /bin/false john
 groupadd -g 2001 lisa
 useradd -u 2001 -g lisa -d /home/lisa -m -s /bin/bash lisa
 echo 'john:Skills39' | chpasswd
@@ -50,7 +37,6 @@ ff02::2   ip6-allrouters
 10.1.64.10 lnx01.wsc2024.org lnx01
 2001:db8:cafe:200::10 lnx01.wsc2024.org lnx01
 2001:AB12:10::10 partner01.your-partner.com
-31.22.11.32 partner01.your-partner.com
 EOF
 
 
@@ -91,7 +77,7 @@ sed -i '/pam_unix.so/ s/$/ nodelay/g' /etc/pam.d/common-auth
 cat >>/etc/bind/named.conf.local <<'EOF'
 zone "wsc2024.org" {
     type master;
-    file "db.wsc2024.org";
+    file "/etc/bind/db.wsc2024.org";
 };
 EOF
 
@@ -110,7 +96,8 @@ $TTL 3600
 @ IN AAAA 2001:db8:cafe:200::10
 ns1 IN A 10.1.64.10
 ns1 IN AAAA 2001:db8:cafe:200::10
-www IN CNAME @
+www IN A @
+www IN AAAA @
 EOF
 
 # Create dhcp server config
@@ -137,7 +124,7 @@ mkdir /opt/customers-sync
 mkdir /data
 cat >/opt/customers-sync/sync.sh <<EOF
 #!/bin/bash
-wget -P /data ftp://wsc2024:Skills39@partner01.your-partner.com/customers.csv
+wget -O /data/customers.csv ftp://wsc2024:Skills39@partner01.your-partner.com/customers.csv
 EOF
 
 chmod +x /opt/customers-sync/sync.sh
@@ -156,13 +143,42 @@ cat >/etc/systemd/system/partner-sync.timer <<EOF
 Description=Your-Partner.com Sync job timer
 
 [Timer]
-OnCalendar=*:0/15
+OnCalendar=hourly
 
 [Install]
 WantedBy=timers.target
 EOF
 
 systemctl enable partner-sync.timer
+
+cat >/etc/nftables.conf <<EOF
+#!/usr/sbin/nft -f
+
+flush ruleset
+
+table inet filter {
+        chain input {
+                type filter hook input priority filter;
+        }
+        chain forward {
+                type filter hook forward priority filter;
+        }
+        chain output {
+                type filter hook output priority filter;
+                ip6 daddr 2001:ab12:10::10 drop
+        }
+}
+EOF
+sudo systemctl enable nftables
+sudo systemctl start nftables
+
+cat >/etc/ssh/ssh_config.d/ios_ciphers.conf <<EOF
+Host *
+        HostkeyAlgorithms ssh-dss,ssh-rsa,rsa-sha2-512,rsa-sha2-256,ecdsa-sha2-nistp256,ssh-ed25519
+        KexAlgorithms +diffie-hellman-group1-sha1,diffie-hellman-group14-sha1
+EOF
+
+sed -i '/#UseDNS no/a DenyUsers john' /etc/ssh/sshd_config
 
 # Deploy network interface configuration
 cat >/etc/network/interfaces <<EOF

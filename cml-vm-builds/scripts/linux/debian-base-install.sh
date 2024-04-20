@@ -40,3 +40,9 @@ apt-get install -qqy \
   smbclient \
   sshpass \
   vim
+
+cat >/etc/ssh/ssh_config.d/ios_ciphers.conf <<EOF
+Host *
+        HostkeyAlgorithms ssh-dss,ssh-rsa,rsa-sha2-512,rsa-sha2-256,ecdsa-sha2-nistp256,ssh-ed25519
+        KexAlgorithms +diffie-hellman-group1-sha1,diffie-hellman-group14-sha1
+EOF

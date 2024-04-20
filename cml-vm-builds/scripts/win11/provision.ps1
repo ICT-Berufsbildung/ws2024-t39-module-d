@@ -79,6 +79,10 @@ powercfg /hibernate off
 Write-Host 'Setting the power plan to high performance...'
 powercfg /setactive 8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c
 
+# Disable monitor timeout
+powercfg -x -monitor-timeout-ac 0
+powercfg -x -monitor-timeout-dc 0
+
 Write-Host 'Disabling the Windows Boot Manager menu...'
 # NB to have the menu show with a lower timeout, run this instead: bcdedit /timeout 2
 #    NB with a timeout of 2 you can still press F8 to show the boot manager menu.

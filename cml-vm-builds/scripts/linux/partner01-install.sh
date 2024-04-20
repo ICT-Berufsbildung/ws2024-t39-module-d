@@ -94,6 +94,11 @@ iface $ifname inet static
   netmask 255.255.255.128
   gateway 31.22.11.1
 
+auto $ifname:0
+iface $ifname:0 inet static
+  address 31.22.11.33
+  netmask 255.255.255.128
+
 iface $ifname inet6 static
   address 2001:AB12:10::10
   netmask 64

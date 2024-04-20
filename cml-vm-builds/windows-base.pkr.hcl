@@ -10,7 +10,7 @@ packer {
 
 variable "win11_iso_checksum" {
   type    = string
-  default = "sha256:c8dbc96b61d04c8b01faf6ce0794fdf33965c7b350eaa3eb1e6697019902945c"
+  default = "sha256:2a6e701b2b3b31f10fdc8851c07ff1a352c348a7d5711e1010f60b562e87be6e"
 }
 
 variable "win11_iso_url" {
@@ -24,7 +24,7 @@ variable "winsrv_iso_url" {
 
 variable "winsrv_iso_checksum" {
   type    = string
-  default = "sha256:3e4fa6d8507b554856fc9ca6079cc402df11a8b79344871669f0251535255325"
+  default = "sha256:e215493d331ebd57ea294b2dc96f9f0d025bc97b801add56ef46d8868d810053"
 }
 
 source "qemu" "win11-base" {

@@ -43,24 +43,19 @@
                     </InstallTo>
                     <InstallFrom>
                         <MetaData wcm:action="add">
-                            <Key>/IMAGE/INDEX</Key>
-                            <Value>1</Value>
+                            <Key>/IMAGE/NAME</Key>
+                            <Value>Windows 11 Enterprise</Value>
                         </MetaData>
                     </InstallFrom>
                 </OSImage>
             </ImageInstall>
             <UserData>
                 <ProductKey>
-                    <!--
-                        Generic Volume License Keys (GVLK) for Key Management Services (KMS) client activation
-                        https://learn.microsoft.com/en-us/windows-server/get-started/kms-client-activation-keys
-                    -->
-                    <!--<Key>NPPR9-FWDCX-D2C8J-H872K-2YT43</Key>-->
                     <WillShowUI>OnError</WillShowUI>
                 </ProductKey>
                 <AcceptEula>true</AcceptEula>
-                <FullName>Vagrant</FullName>
-                <Organization>Vagrant</Organization>
+                <FullName>Skill39</FullName>
+                <Organization>WorldSkills Skill39</Organization>
             </UserData>
             <RunSynchronous>
                 <RunSynchronousCommand wcm:action="add">
@@ -155,5 +150,5 @@
             <EnableLUA>false</EnableLUA>
         </component>
     </settings>
-    <cpi:offlineImage cpi:source="wim:c:/wim/windows-11/install.wim#Windows 10 Enterprise Evaluation" xmlns:cpi="urn:schemas-microsoft-com:cpi" />
+    <cpi:offlineImage cpi:source="wim:c:/wim/windows-11/install.wim#Windows 11 Enterprise" xmlns:cpi="urn:schemas-microsoft-com:cpi" />
 </unattend>

@@ -51,16 +51,12 @@
             </ImageInstall>
             <UserData>
                 <ProductKey>
-                    <!--
-                        Generic Volume License Keys (GVLK) for Key Management Services (KMS) client activation
-                        https://learn.microsoft.com/en-us/windows-server/get-started/kms-client-activation-keys
-                    -->
-                    <!--<Key>VDYBN-27WPP-V4HQT-9VMD4-VMK7H</Key>-->
+                    <Key>VDYBN-27WPP-V4HQT-9VMD4-VMK7H</Key>
                     <WillShowUI>OnError</WillShowUI>
                 </ProductKey>
                 <AcceptEula>true</AcceptEula>
-                <FullName>Vagrant</FullName>
-                <Organization>Vagrant</Organization>
+                <FullName>Skill39</FullName>
+                <Organization>WorldSkills Skill39</Organization>
             </UserData>
         </component>
         <component name="Microsoft-Windows-International-Core-WinPE" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">

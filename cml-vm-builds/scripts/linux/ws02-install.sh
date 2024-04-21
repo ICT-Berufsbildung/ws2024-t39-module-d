@@ -15,21 +15,10 @@ apt-get -qqy update
 apt-get install -qqy \
   -o DPkg::options::="--force-confdef" \
   -o DPkg::options::="--force-confold" \
-  apache2 \
-  apache2-doc \
   xfce4 \
   xfce4-terminal \
   firefox-esr \
   mousepad
-
-
-# Enable auto-login on tty1
-mkdir -p /etc/systemd/system/getty@tty1.service.d
-cat >/etc/systemd/system/getty@tty1.service.d/override.conf <<'EOF'
-[Service]
-ExecStart=
-ExecStart=-/sbin/agetty -o '-p -f -- \\u' --autologin peter --noclear %I $TERM
-EOF
 
 cat >/home/peter/.bash_profile <<'EOF'
 startxfce4
@@ -58,9 +47,6 @@ rm -f /etc/apt/sources.list.d/*
 cat >/etc/apt/sources.list <<'EOF'
 # No package repositories available
 EOF
-
-# Overwrite default Apache page for compact output
-echo 'Welcome to Intranet' >/var/www/html/index.html
 
 # Use local BIND9 as system resolver
 cat >/etc/resolv.conf <<'EOF'

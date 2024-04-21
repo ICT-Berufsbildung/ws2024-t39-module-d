@@ -2,36 +2,14 @@ annotations:
   - border_color: '#808080FF'
     border_radius: 0
     border_style: ''
-    color: '#8AE2D1FF'
+    color: '#72D0EB82'
     thickness: 1
     type: rectangle
-    x1: -440.0
+    x1: -600.0
     y1: -360.0
-    x2: 360.0
-    y2: 320.0
-    z_index: 1
-  - border_color: '#808080FF'
-    border_radius: 0
-    border_style: ''
-    color: '#72D0EBFF'
-    thickness: 1
-    type: rectangle
-    x1: -520.0
-    y1: -440.0
-    x2: 960.0
-    y2: 560.0
+    x2: 1080.0
+    y2: 600.0
     z_index: 0
-  - border_color: '#808080FF'
-    border_radius: 0
-    border_style: ''
-    color: '#FF6C0CFF'
-    thickness: 1
-    type: rectangle
-    x1: 40.0
-    y1: -120.0
-    x2: 400.0
-    y2: 240.0
-    z_index: 2
   - border_color: '#808080FF'
     border_style: ''
     color: '#D51067FF'
@@ -54,17 +32,107 @@ annotations:
     text_unit: pt
     thickness: 1
     type: text
-    x1: -520.0
-    y1: -480.0
+    x1: -600.0
+    y1: -400.0
     z_index: 4
+  - border_color: '#00000000'
+    border_style: ''
+    color: '#808080FF'
+    rotation: 0
+    text_bold: false
+    text_content: Internet
+    text_font: monospace
+    text_italic: false
+    text_size: 20
+    text_unit: pt
+    thickness: 1
+    type: text
+    x1: 640.0
+    y1: -360.0
+    z_index: 5
+  - border_color: '#00000000'
+    border_style: ''
+    color: '#000000FF'
+    rotation: 0
+    text_bold: false
+    text_content: Campus
+    text_font: monospace
+    text_italic: false
+    text_size: 20
+    text_unit: pt
+    thickness: 1
+    type: text
+    x1: -374.0
+    y1: -115.0
+    z_index: 9
+  - border_color: '#00000000'
+    border_style: ''
+    color: '#000000FF'
+    rotation: 0
+    text_bold: false
+    text_content: Datacenter
+    text_font: monospace
+    text_italic: false
+    text_size: 20
+    text_unit: pt
+    thickness: 1
+    type: text
+    x1: 240.0
+    y1: 200.0
+    z_index: 8
+  - border_color: '#808080FF'
+    border_style: ''
+    color: '#FF6C0CFF'
+    thickness: 1
+    type: ellipse
+    x1: 320.0
+    y1: 60.0
+    x2: 160.0
+    y2: 180.0
+    z_index: 7
+  - border_color: '#808080FF'
+    border_style: ''
+    color: '#8AE2D1FF'
+    thickness: 1
+    type: ellipse
+    x1: -320.0
+    y1: -200.0
+    x2: 280.0
+    y2: 120.0
+    z_index: 8
+  - border_color: '#808080FF'
+    border_style: ''
+    color: '#72D0EBFF'
+    thickness: 1
+    type: ellipse
+    x1: 160.0
+    y1: -180.0
+    x2: 240.0
+    y2: 140.0
+    z_index: 6
+  - border_color: '#00000000'
+    border_style: ''
+    color: '#000000FF'
+    rotation: 0
+    text_bold: false
+    text_content: CORE
+    text_font: monospace
+    text_italic: false
+    text_size: 20
+    text_unit: pt
+    thickness: 1
+    type: text
+    x1: 124.0
+    y1: -308.0
+    z_index: 10
 nodes:
   - boot_disk_size: null
     configuration: |-
       Building configuration...
 
-      Current configuration : 3571 bytes
+      Current configuration : 3736 bytes
       !
-      ! Last configuration change at 20:21:35 UTC Fri Mar 29 2024
+      ! Last configuration change at 10:02:06 UTC Sun Apr 21 2024
       !
       version 15.2
       service timestamps debug datetime msec
@@ -119,6 +187,7 @@ nodes:
        switchport mode access
        switchport nonegotiate
        switchport port-security mac-address sticky
+       switchport port-security
        negotiation auto
        spanning-tree portfast edge
       !
@@ -127,6 +196,8 @@ nodes:
        switchport mode access
        switchport nonegotiate
        switchport port-security mac-address sticky
+       switchport port-security mac-address sticky d8bb.c1a4.e684
+       switchport port-security
        negotiation auto
        spanning-tree portfast edge
       !
@@ -254,9 +325,9 @@ nodes:
     configuration: |-
       Building configuration...
 
-      Current configuration : 4632 bytes
+      Current configuration : 4671 bytes
       !
-      ! Last configuration change at 20:00:25 UTC Mon Apr 1 2024
+      ! Last configuration change at 10:53:00 UTC Sun Apr 21 2024
       !
       version 15.9
       service timestamps debug datetime msec
@@ -403,6 +474,7 @@ nodes:
       no ip http secure-server
       !
       ipv6 router ospf 1
+       auto-cost reference-bandwidth 100000
        passive-interface default
        no passive-interface GigabitEthernet0/1
       !
@@ -487,9 +559,10 @@ nodes:
     configuration: |-
       Building configuration...
 
-      Current configuration : 4340 bytes
+
+      Current configuration : 4515 bytes
       !
-      ! Last configuration change at 20:01:10 UTC Mon Apr 1 2024
+      ! Last configuration change at 10:50:17 UTC Sun Apr 21 2024
       !
       version 15.9
       service timestamps debug datetime msec
@@ -524,6 +597,7 @@ nodes:
       !
       !
       no ip domain lookup
+      ip domain name wsc2024.local
       ip cef
       ipv6 unicast-routing
       ipv6 cef
@@ -533,6 +607,7 @@ nodes:
       !
       !
       !
+      username admin privilege 15 password 0 Skills39
       !
       redundancy
       !
@@ -554,7 +629,6 @@ nodes:
        ip address 10.254.1.12 255.255.255.255
        ipv6 address 2001:DB8:CAFE:254::12/128
        ipv6 enable
-       ipv6 ospf 1 area 0
        ipv6 ospf network point-to-point
       !
       interface GigabitEthernet0/0
@@ -568,10 +642,10 @@ nodes:
        ip address 10.1.0.3 255.255.254.0
        ip helper-address 10.1.64.10
        standby version 2
-       standby 100 ip 10.1.0.1
+       standby 100 ip 10.1.0.2
        standby 100 authentication md5 key-string Skills39
        standby 101 ipv6 autoconfig
-       standby 101 authentication md5 key-string Skills39
+       standby 101 authentication md5 key-string Skillss39
        ipv6 address 2001:DB8:CAFE:100::3/64
        ipv6 enable
        ipv6 ospf 1 area 0
@@ -625,8 +699,10 @@ nodes:
       !
       no ip http server
       no ip http secure-server
+      ip ssh version 2
       !
       ipv6 router ospf 1
+       auto-cost reference-bandwidth 100000
        passive-interface default
        no passive-interface GigabitEthernet0/1
       !
@@ -669,8 +745,11 @@ nodes:
       line aux 0
       line vty 0 4
        exec-timeout 0 0
-       login
-       transport input none
+       no login
+       transport input telnet ssh
+      line vty 5 15
+       no login
+       transport input telnet ssh
       !
       no scheduler allocate
       !
@@ -711,9 +790,9 @@ nodes:
     configuration: |-
       Building configuration...
 
-      Current configuration : 3939 bytes
+      Current configuration : 4149 bytes
       !
-      ! Last configuration change at 19:40:30 UTC Sun Apr 7 2024
+      ! Last configuration change at 11:11:55 UTC Sun Apr 21 2024
       !
       version 15.9
       service timestamps debug datetime msec
@@ -784,6 +863,8 @@ nodes:
       !
       interface GigabitEthernet0/0
        ip address 20.20.1.192 255.255.255.254
+       ip nat outside
+       ip virtual-reassembly in
        duplex auto
        speed auto
        media-type rj45
@@ -792,6 +873,8 @@ nodes:
       !
       interface GigabitEthernet0/1
        ip address 31.22.11.1 255.255.255.128
+       ip nat inside
+       ip virtual-reassembly in
        duplex auto
        speed auto
        media-type rj45
@@ -819,6 +902,7 @@ nodes:
        !
        address-family ipv4
         network 8.8.8.0 mask 255.255.255.0
+        network 9.9.9.9 mask 255.255.255.255
         network 31.22.11.0 mask 255.255.255.128
         neighbor 20.20.1.193 activate
         no neighbor 2001:DB8:FAFE:42::2 activate
@@ -837,6 +921,8 @@ nodes:
       !
       no ip http server
       no ip http secure-server
+      ip nat inside source static 31.22.11.33 9.9.9.9
+      ip route 9.9.9.9 255.255.255.255 Null0
       !
       ipv6 route 2001:DB8:AFA::/48 Null0
       ipv6 route 2001:AB12:10::/48 Null0
@@ -922,9 +1008,9 @@ nodes:
     configuration: |-
       Building configuration...
 
-      Current configuration : 4639 bytes
+      Current configuration : 4748 bytes
       !
-      ! Last configuration change at 20:24:49 UTC Fri Mar 29 2024
+      ! Last configuration change at 10:56:14 UTC Sun Apr 21 2024
       !
       version 15.9
       service timestamps debug datetime msec
@@ -1029,6 +1115,7 @@ nodes:
        media-type rj45
       !
       router ospf 1
+       auto-cost reference-bandwidth 100000
        passive-interface default
        no passive-interface GigabitEthernet0/0
        network 10.254.1.14 0.0.0.0 area 0
@@ -1066,6 +1153,7 @@ nodes:
       ip prefix-list TO-ISP seq 5 permit 42.42.42.0/24
       ipv6 route 2001:DB8:CAFE::/48 Null0
       ipv6 router ospf 1
+       auto-cost reference-bandwidth 100000
        default-information originate always
        passive-interface default
        no passive-interface GigabitEthernet0/0
@@ -1075,6 +1163,7 @@ nodes:
       !
       ipv6 prefix-list TO-ISP seq 5 permit 2001:DB8:CAFE::/48
       !
+      access-list 10 deny   10.1.64.12
       access-list 10 permit 10.0.0.0 0.255.255.255
       !
       control-plane
@@ -1154,9 +1243,9 @@ nodes:
     configuration: |-
       Building configuration...
 
-      Current configuration : 4657 bytes
+      Current configuration : 4667 bytes
       !
-      ! Last configuration change at 19:57:57 UTC Sat Apr 13 2024
+      ! Last configuration change at 09:14:06 UTC Sun Apr 21 2024
       !
       version 15.2
       service timestamps debug datetime msec
@@ -1215,10 +1304,10 @@ nodes:
        ipv6 enable
       !
       interface Port-channel1
-       description TO-DCRTR01
        no switchport
        ip address 10.254.254.5 255.255.255.254
        ip ospf network point-to-point
+       ipv6 address FE80::1 link-local
        ipv6 enable
        ipv6 ospf 1 area 0
        ipv6 ospf network point-to-point
@@ -1266,7 +1355,7 @@ nodes:
        no switchport
        no ip address
        negotiation auto
-       channel-group 1 mode active
+       channel-group 1 mode passive
       !
       interface GigabitEthernet1/1
        negotiation auto
@@ -1402,9 +1491,9 @@ nodes:
     configuration: |-
       Building configuration...
 
-      Current configuration : 4400 bytes
+      Current configuration : 4368 bytes
       !
-      ! Last configuration change at 19:57:07 UTC Sat Apr 13 2024
+      ! Last configuration change at 08:32:42 UTC Sun Apr 21 2024
       !
       version 15.2
       service timestamps debug datetime msec
@@ -1464,6 +1553,7 @@ nodes:
        no switchport
        ip address 10.254.254.4 255.255.255.254
        ip ospf network point-to-point
+       ipv6 address FE80::2 link-local
        ipv6 enable
        ipv6 ospf 1 area 0
        ipv6 ospf network point-to-point
@@ -1471,16 +1561,14 @@ nodes:
       interface GigabitEthernet0/0
        no switchport
        no ip address
-       ip ospf network point-to-point
        negotiation auto
-       ipv6 ospf network point-to-point
        channel-group 1 mode active
       !
       interface GigabitEthernet0/1
        no switchport
        no ip address
        negotiation auto
-       channel-group 1 mode active
+       channel-group 1 mode passive
       !
       interface GigabitEthernet0/2
        switchport access vlan 200
@@ -1643,7 +1731,7 @@ nodes:
     data_volume: null
     hide_links: false
     id: n7
-    image_definition: lnx01
+    image_definition: null
     label: lnx01
     node_definition: lnx01
     ram: null
@@ -1663,12 +1751,12 @@ nodes:
     hide_links: false
     id: n8
     image_definition: null
-    label: ws02-0
+    label: ws02
     node_definition: ws02
     ram: null
     tags: []
-    x: -520
-    y: -80
+    x: -480
+    y: -160
     interfaces:
       - id: i0
         label: Ethernet
@@ -1701,7 +1789,7 @@ nodes:
     hide_links: false
     id: n10
     image_definition: null
-    label: dc01-0
+    label: dc01
     node_definition: dc01
     ram: null
     tags: []
@@ -1720,12 +1808,12 @@ nodes:
     hide_links: false
     id: n11
     image_definition: null
-    label: ws01-0
+    label: ws01
     node_definition: ws01
     ram: null
     tags: []
-    x: -520
-    y: -200
+    x: -480
+    y: -240
     interfaces:
       - id: i0
         label: Ethernet
@@ -1739,7 +1827,7 @@ nodes:
     hide_links: false
     id: n12
     image_definition: null
-    label: lnx02-0
+    label: lnx02
     node_definition: lnx02
     ram: null
     tags: []
@@ -1748,6 +1836,25 @@ nodes:
     interfaces:
       - id: i0
         label: Ethernet0
+        slot: 0
+        type: physical
+  - boot_disk_size: null
+    configuration: null
+    cpu_limit: null
+    cpus: null
+    data_volume: null
+    hide_links: false
+    id: n13
+    image_definition: null
+    label: lnx03
+    node_definition: lnx03
+    ram: null
+    tags: []
+    x: 400
+    y: 160
+    interfaces:
+      - id: i0
+        label: ens3
         slot: 0
         type: physical
 links:
@@ -1849,18 +1956,25 @@ links:
     i2: i0
     conditioning: {}
     label: DCRTR01-GigabitEthernet1/0<->lnx02-0-Ethernet0
+  - id: l14
+    n1: n13
+    n2: n6
+    i1: i0
+    i2: i6
+    conditioning: {}
+    label: lnx03-0-ens3<->DCRTR01-GigabitEthernet1/1
 lab:
   description: ''
   notes: |-
     # WSC2024 TSHOOT Test Project 🏆
-    There are 10 troubleshooting tickets on the ticketing system. Try to solve as many tickets as possible!
+    There are 15 troubleshooting tickets on the ticketing system. Try to solve as many tickets as possible!
 
     Good luck🍀
     ## Credentials
     ### Cisco devices
     * username: admin
     * password: Skills39
-    ### Windows machines
+    ### Windows & Linux machines
     * username: sysop
     * password: Skills39
   title: WSC2024_TSHOOT

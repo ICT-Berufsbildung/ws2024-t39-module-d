@@ -48,9 +48,9 @@ EOF
 
 # Overwrite default Apache page for compact output
 echo 'Welcome to WSC2024.org' >/var/www/html/index.html
+mkdir -p /var/www/secret
+echo 'Welcome to Secret app at WSC2024.org' > /var/www/secret/index.html
 
-
-echo 'Welcome to Secret app at WSC2024.org' >/var/www/secret/index.html
 cat >/etc/apache2/sites-available/secret.conf <<'EOF'
 <VirtualHost *:8080>
     ServerName www.wsc2024.org
@@ -92,12 +92,14 @@ $TTL 3600
   3600
 )
 @ IN NS ns1.wsc2024.org.
-@ IN A 10.1.64.10
-@ IN AAAA 2001:db8:cafe:200::10
+@ IN A 10.1.64.9
+@ IN AAAA 2001:db8:cafe:200::9
 ns1 IN A 10.1.64.10
 ns1 IN AAAA 2001:db8:cafe:200::10
 www IN A @
 www IN AAAA @
+app IN A 10.1.64.10
+app IN AAAA 2001:db8:cafe:200::10
 EOF
 
 # Create dhcp server config
@@ -122,14 +124,14 @@ EOF
 # FTP sync
 mkdir /opt/customers-sync
 mkdir /data
-cat >/opt/customers-sync/sync.sh <<EOF
+cat >/opt/customers-sync/sync.sh <<'EOF'
 #!/bin/bash
 wget -O /data/customers.csv ftp://wsc2024:Skills39@partner01.your-partner.com/customers.csv
 EOF
 
 chmod +x /opt/customers-sync/sync.sh
 
-cat >/etc/systemd/system/partner-sync.service <<EOF
+cat >/etc/systemd/system/partner-sync.service <<'EOF'
 [Unit]
 Description=Your-Partner.com Sync job
 
@@ -138,7 +140,7 @@ Type=oneshot
 ExecStart=/bin/bash /opt/customers-sync/sync.sh
 EOF
 
-cat >/etc/systemd/system/partner-sync.timer <<EOF
+cat >/etc/systemd/system/partner-sync.timer <<'EOF'
 [Unit]
 Description=Your-Partner.com Sync job timer
 
@@ -151,10 +153,20 @@ EOF
 
 systemctl enable partner-sync.timer
 
+# Create firewall rule directory
+mkdir -p /etc/firewall/rules
+
+# Enable IP forwarding
+sed -i 's/#net.ipv4.ip_forward=1/net.ipv4.ip_forward=1/g' /etc/sysctl.conf
+sed -i 's/#net.ipv6.conf.all.forwarding=1/net.ipv6.conf.all.forwarding=1/g' /etc/sysctl.conf
+sysctl -p
+
 cat >/etc/nftables.conf <<EOF
 #!/usr/sbin/nft -f
 
 flush ruleset
+
+include "/etc/firewall/rules/*"
 
 table inet filter {
         chain input {
@@ -169,14 +181,17 @@ table inet filter {
         }
 }
 EOF
-sudo systemctl enable nftables
-sudo systemctl start nftables
 
-cat >/etc/ssh/ssh_config.d/ios_ciphers.conf <<EOF
-Host *
-        HostkeyAlgorithms ssh-dss,ssh-rsa,rsa-sha2-512,rsa-sha2-256,ecdsa-sha2-nistp256,ssh-ed25519
-        KexAlgorithms +diffie-hellman-group1-sha1,diffie-hellman-group14-sha1
+cat >/etc/firewall/rules/common.conf <<EOF
+table inet filter {
+        chain prerouting {
+                type nat hook prerouting priority -100;
+                iif $ifname tcp dport { 8080 } counter redirect to 80
+        }
+}
 EOF
+systemctl enable nftables
+systemctl start nftables
 
 sed -i '/#UseDNS no/a DenyUsers john' /etc/ssh/sshd_config
 

@@ -54,8 +54,10 @@ New-ADGroup -Name "DL-FS_Finance-RO" -SamAccountName "DL-FS_Finance-RO" -GroupCa
 
 New-ADGroup -Name "DL-FS_Marketing-RW" -SamAccountName "DL-FS_Marketing-RW" -GroupCategory Security -GroupScope DomainLocal -Path "OU=Groups,OU=HQ,DC=wsc2024,DC=local"
 New-ADGroup -Name "DL-FS_Marketing-RO" -SamAccountName "DL-FS_Marketing-RO" -GroupCategory Security -GroupScope DomainLocal -Path "OU=Groups,OU=HQ,DC=wsc2024,DC=local"
+New-ADGroup -Name "DL-FS_Marketing-Project-Alpha-RW" -SamAccountName "DDL-FS_Marketing-Project-Alpha-RO" -GroupCategory Security -GroupScope DomainLocal -Path "OU=Groups,OU=HQ,DC=wsc2024,DC=local"
 
 Add-ADGroupMember -Identity "DL-FS_Marketing-RW" -Members GL-Marketing
+Add-ADGroupMember -Identity "DL-FS_Marketing-Project-Alpha-RW" -Members weiss
 
 Write-Host "Create GPO"
 $gpo = New-GPO -Name "WSC2024_DO_NOT_ALLOW_REGEDIT"
@@ -92,7 +94,7 @@ New-Item -Path $financeFolder -ItemType Directory
 New-Item -Path $marketingFolder -ItemType Directory
 
 New-SMBShare –Name Finance –Path $financeFolder –FullAccess Everyone -FolderEnumerationMode "AccessBased"
-New-SMBShare –Name Marketing –Path $marketingFolder –FullAccess Everyone -FolderEnumerationMode "AccessBased"
+New-SMBShare –Name Marketing –Path $marketingFolder –FullAccess Everyone -FolderEnumerationMode "Unrestricted"
 
 Write-Host "Set file permissions"
 $acl = Get-Acl -Path $financeFolder
@@ -135,6 +137,22 @@ $acl.SetAccessRule($mdRule)
 $acl.SetAccessRule($roRule)
 
 Set-Acl -Path $marketingFolder -AclObject $acl
+
+
+New-Item -Path "$marketingFolder\PROJECT_ALPHA" -ItemType Directory
+Write-Host "Set file permissions"
+$acl = Get-Acl -Path "$marketingFolder\PROJECT_ALPHA"
+# Define Full Control Group
+$fcRule = New-Object System.Security.AccessControl.FileSystemAccessRule("WSC2024\GL-IT","FullControl","ContainerInherit,ObjectInherit","None","Allow")
+# Define Modify Group
+$mdRule = New-Object System.Security.AccessControl.FileSystemAccessRule("WSC2024\DL-FS_Marketing-Project-Alpha-RW","Modify","ContainerInherit,ObjectInherit","None","Allow")
+# Disable Inheritance
+$acl.SetAccessRuleProtection($true,$false)
+$acl.PurgeAccessRules($everyone)
+# Add Full Control Rule
+$acl.SetAccessRule($fcRule)
+# Add Modify Rule
+$acl.SetAccessRule($mdRule)
 
 # Block CSV file
 New-FsrmFileGroup -Name "WSC2024_Blacklist" -IncludePattern @("*.csv", "*.html")

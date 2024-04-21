@@ -39,7 +39,8 @@ apt-get install -qqy \
   netcat-openbsd \
   smbclient \
   sshpass \
-  vim
+  vim \
+  tcpdump
 
 cat >/etc/ssh/ssh_config.d/ios_ciphers.conf <<EOF
 Host *

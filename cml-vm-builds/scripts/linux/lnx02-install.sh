@@ -53,6 +53,9 @@ iface $ifname inet6 static
   accept_ra 1
 EOF
 
+# Disable IPv6
+echo "net.ipv6.conf.$ifname.disable_ipv6 = 1" >> /etc/sysctl.conf
+
 cat >/etc/pam.d/common-auth <<EOF
 #
 # /etc/pam.d/common-auth - authentication settings common to all services

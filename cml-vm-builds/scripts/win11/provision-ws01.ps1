@@ -1,4 +1,3 @@
-
 Write-Host "Prepare domain join"
 $principal = New-ScheduledTaskPrincipal -UserId "NT AUTHORITY\SYSTEM" -LogonType ServiceAccount -RunLevel Highest
 $trigger = New-JobTrigger -AtStartup -RandomDelay 00:01:00
@@ -30,3 +29,6 @@ $addPath = 'C:\Program Files\Powershell\asdf\'
 $regexRemovePath = [regex]::Escape($removePath)
 $arrPath = $env:Path -split ';' | Where-Object {$_ -notMatch "^$regexRemovePath\\?"}
 [System.Environment]::SetEnvironmentVariable('Path',(($arrPath + $addPath) -join ';'), 'Machine')
+
+# Instal notepad++
+choco install notepadplusplus -y

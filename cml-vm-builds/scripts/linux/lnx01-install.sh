@@ -9,6 +9,9 @@ groupadd -g 2000 john
 useradd -u 2000 -g john -d /home/john -m -s /bin/false john
 groupadd -g 2001 lisa
 useradd -u 2001 -g lisa -d /home/lisa -m -s /bin/bash lisa
+groupadd -g 2002 remoteworkers
+usermod -a -G remoteworkers lisa
+usermod -a -G remoteworkers sysop
 echo 'john:Skills39' | chpasswd
 echo 'lisa:Skills39' | chpasswd
 
@@ -96,10 +99,10 @@ $TTL 3600
 @ IN AAAA 2001:db8:cafe:200::9
 ns1 IN A 10.1.64.10
 ns1 IN AAAA 2001:db8:cafe:200::10
-www IN A @
-www IN AAAA @
+www IN CNAME @
 app IN A 10.1.64.10
 app IN AAAA 2001:db8:cafe:200::10
+maintenance IN CNAME app
 EOF
 
 # Create dhcp server config
@@ -211,5 +214,5 @@ iface $ifname inet static
 iface $ifname inet6 static
   address 2001:db8:cafe:200::10
   netmask 64
-  accept_ra 1
+  accept_ra 2
 EOF

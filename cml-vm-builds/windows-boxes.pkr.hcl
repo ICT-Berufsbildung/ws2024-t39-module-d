@@ -95,6 +95,12 @@ build {
     use_pwsh = true
     inline = ["Rename-Computer -NewName dc01"]
   }
+  
+  provisioner "powershell" {
+    only   = ["qemu.ws01"]
+    use_pwsh = true
+    script = "./scripts/win11/provision-chocolatey.ps1"
+  }
 
   provisioner "powershell" {
     only   = ["qemu.ws01"]

@@ -196,7 +196,20 @@ EOF
 systemctl enable nftables
 systemctl start nftables
 
-sed -i '/#UseDNS no/a DenyUsers john' /etc/ssh/sshd_config
+# Backup access.conf
+cp /etc/security/access.conf /etc/security/access.conf.orig
+# Block john from accessing the server
+cat >/etc/security/access.conf <<EOF
++:john:LOCAL
+
+-:john:ALL
+
++:ALL:ALL
+EOF
+
+# Enable pam_access module
+sed -i 's/# account  required     pam_access.so/account  required     pam_access.so/g' /etc/pam.d/sshd
+
 
 # Deploy network interface configuration
 cat >/etc/network/interfaces <<EOF

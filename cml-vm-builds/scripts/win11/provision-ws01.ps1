@@ -32,3 +32,5 @@ $arrPath = $env:Path -split ';' | Where-Object {$_ -notMatch "^$regexRemovePath\
 
 # Instal notepad++
 choco install notepadplusplus -y
+choco install winscp -y
+choco install putty -y

@@ -41,6 +41,9 @@ foreach ($u in $users){
     New-ADUser -Name $u -SamAccountName $username -UserPrincipalName "$username@wsc2024.local" -AccountPassword (ConvertTo-SecureString "Skills39" -AsPlainText -Force) -Enable $true
 }
 
+$Logonhours = [byte[]]$LogonHours = @(0,255,3, 0,255,3, 0,255,3, 0,255,3, 0,255,3, 0,255,3, 0,255,3)
+Set-ADUser -Identity "terry" -replace @{logonhours = $Logonhours}
+
 foreach ($group in @('Marketing', 'IT', 'Finance')) {
     New-ADGroup -Name "GL-$group" -SamAccountName "GL-$group" -GroupCategory Security -GroupScope Global -Path "OU=Groups,OU=HQ,DC=wsc2024,DC=local"
 }
@@ -54,7 +57,7 @@ New-ADGroup -Name "DL-FS_Finance-RO" -SamAccountName "DL-FS_Finance-RO" -GroupCa
 
 New-ADGroup -Name "DL-FS_Marketing-RW" -SamAccountName "DL-FS_Marketing-RW" -GroupCategory Security -GroupScope DomainLocal -Path "OU=Groups,OU=HQ,DC=wsc2024,DC=local"
 New-ADGroup -Name "DL-FS_Marketing-RO" -SamAccountName "DL-FS_Marketing-RO" -GroupCategory Security -GroupScope DomainLocal -Path "OU=Groups,OU=HQ,DC=wsc2024,DC=local"
-New-ADGroup -Name "DL-FS_Marketing-Project-Alpha-RW" -SamAccountName "DDL-FS_Marketing-Project-Alpha-RO" -GroupCategory Security -GroupScope DomainLocal -Path "OU=Groups,OU=HQ,DC=wsc2024,DC=local"
+New-ADGroup -Name "DL-FS_Marketing-Project-Alpha-RW" -SamAccountName "DL-FS_Marketing-Project-Alpha-RW" -GroupCategory Security -GroupScope DomainLocal -Path "OU=Groups,OU=HQ,DC=wsc2024,DC=local"
 
 Add-ADGroupMember -Identity "DL-FS_Marketing-RW" -Members GL-Marketing
 Add-ADGroupMember -Identity "DL-FS_Marketing-Project-Alpha-RW" -Members weiss
@@ -65,6 +68,12 @@ Set-GPRegistryValue -Name "WSC2024_DO_NOT_ALLOW_REGEDIT" -Key "HKCU\Software\Mic
 New-GPLink -Guid $gpo.Id -Target "DC=wsc2024,DC=local" -LinkEnabled Yes -Order 1
 Set-GPPermissions -Name "WSC2024_DO_NOT_ALLOW_REGEDIT" -TargetName "GL-Marketing" -PermissionLevel GpoApply -TargetType 'Group'
 dsacls "cn={$($gpo.id)},cn=policies,$((Get-ADDomain).SystemsContainer)" /R "Authenticated Users"
+
+$gpo = New-GPO -Name "WSC2024_Proxy"
+Set-GPRegistryValue -Name "WSC2024_Proxy" -Key "HKCU\Software\Microsoft\Windows\CurrentVersion\Internet Settings" -ValueName ProxyServer -Type String -Value "proxy.wsc2024.local:3128"
+Set-GPRegistryValue -Name "WSC2024_Proxy" -Key "HKCU\Software\Microsoft\Windows\CurrentVersion\Internet Settings" -ValueName ProxyEnable -Type DWord -Value 1
+Set-GPRegistryValue -Name "WSC2024_Proxy" -Key "HKCU\Software\Microsoft\Windows\CurrentVersion\Internet Settings" -ValueName ProxyOverride -Type String -Value "*.wsc2024.local;10.*;"
+New-GPLink -Guid $gpo.Id -Target "DC=wsc2024,DC=local" -LinkEnabled Yes -Order 2
 
 Write-Host "Create DNS reverse zones"
 Add-DnsServerPrimaryZone -NetworkID "10.1.64.0/24" -ReplicationScope "Forest"
@@ -77,10 +86,14 @@ Add-DnsServerPrimaryZone -NetworkID "2001:db8:cafe:150::/64" -ReplicationScope "
 
 Add-DnsServerResourceRecordA -Name "lnx01" -ZoneName "wsc2024.local" -IPv4Address "10.1.64.10" -CreatePtr
 Add-DnsServerResourceRecordA -Name "lnx02" -ZoneName "wsc2024.local" -IPv4Address "10.1.64.11" -CreatePtr
+Add-DnsServerResourceRecordA -Name "lnx03" -ZoneName "wsc2024.local" -IPv4Address "10.1.64.12" -CreatePtr
 Add-DnsServerResourceRecordCName -Name "www" -HostNameAlias "lnx01.wsc2024.local" -ZoneName "wsc2024.local"
+Add-DnsServerResourceRecordCName -Name "app" -HostNameAlias "lnx01.wsc2024.local" -ZoneName "wsc2024.local"
+Add-DnsServerResourceRecordCName -Name "proxy" -HostNameAlias "lnx03.wsc2024.local" -ZoneName "wsc2024.local"
 
 Add-DnsServerResourceRecordAAAA -Name "lnx01" -ZoneName "wsc2024.local" -AllowUpdateAny -IPv6Address "2001:db8:cafe:200::10" -CreatePtr
 Add-DnsServerResourceRecordAAAA -Name "lnx02" -ZoneName "wsc2024.local" -AllowUpdateAny -IPv6Address "2001:db8:cafe:200::11" -CreatePtr
+Add-DnsServerResourceRecordAAAA -Name "lnx03" -ZoneName "wsc2024.local" -AllowUpdateAny -IPv6Address "2001:db8:cafe:200::12" -CreatePtr
 
 Add-DnsServerConditionalForwarderZone -Name "wsc2024.org" -ReplicationScope "Forest" -MasterServers 2001:db8:cafe:200::10,10.1.64.10
 (Get-DnsServerForwarder).IPAddress | foreach { Remove-DnsServerForwarder -IPAddress $_ -Force -Confirm:$false}
@@ -93,7 +106,7 @@ $marketingFolder = 'c:\Share\Marketing'
 New-Item -Path $financeFolder -ItemType Directory
 New-Item -Path $marketingFolder -ItemType Directory
 
-New-SMBShare –Name Finance –Path $financeFolder –FullAccess Everyone -FolderEnumerationMode "AccessBased"
+New-SMBShare –Name Finance –Path $financeFolder -NoAccess Everyone -FolderEnumerationMode "AccessBased"
 New-SMBShare –Name Marketing –Path $marketingFolder –FullAccess Everyone -FolderEnumerationMode "Unrestricted"
 
 Write-Host "Set file permissions"

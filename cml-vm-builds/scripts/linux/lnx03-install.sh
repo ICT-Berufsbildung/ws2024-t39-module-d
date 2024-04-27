@@ -7,13 +7,6 @@ ifname=$(ip route get 8.8.8.8 | sed -n 's/.*dev \([^\ ]*\).*/\1/p')
 # Configure hostname and hosts
 echo 'lnx03' >/etc/hostname
 
-# Use local BIND9 as system resolver
-cat >/etc/resolv.conf <<'EOF'
-domain wsc2024.local
-nameserver 10.1.64.20
-nameserver 2001:db8:cafe:200::20
-EOF
-
 # Install required packages unattended
 export DEBIAN_FRONTEND=noninteractive
 apt-get -qqy update
@@ -21,7 +14,8 @@ apt-get install -qqy \
   -o DPkg::options::="--force-confdef" \
   -o DPkg::options::="--force-confold" \
   apache2 \
-  apache2-doc
+  apache2-doc \
+  squid
 
 cat >/etc/hosts <<'EOF'
 127.0.0.1 localhost
@@ -61,8 +55,19 @@ cat >/etc/apache2/sites-available/000-default.conf <<'EOF'
 </VirtualHost>
 EOF
 
+cat >/etc/squid/conf.d/wsc2024.conf <<'EOF'
+# WSC2024 local networks
+acl localnet src 10.0.0.0/16
+acl localnet src 2001:db8:cafe::/48
+# Allow WSC2024 local networks
+http_access deny localnet
+EOF
+
+systemctl enable squid
+systemctl start squid
+
 # Overwrite default Apache page for compact output
-echo 'Welcome to new new webpage WSC2024.org' >/var/www/html/index.html
+echo 'Welcome to NEW webpage WSC2024.org' >/var/www/html/index.html
 
 # Disable package repositories
 rm -f /etc/apt/sources.list.d/*
@@ -75,6 +80,13 @@ sed -i '/pam_unix.so/ s/$/ nodelay/g' /etc/pam.d/common-auth
 
 sed -i 's/hosts.*/hosts:          dns files/' /etc/nsswitch.conf
 
+
+# Use local BIND9 as system resolver
+cat >/etc/resolv.conf <<'EOF'
+domain wsc2024.local
+nameserver 10.1.64.20
+nameserver 2001:db8:cafe:200::20
+EOF
 
 # Deploy network interface configuration
 cat >/etc/network/interfaces <<EOF

@@ -20,6 +20,14 @@ apt-get install -qqy \
   firefox-esr \
   mousepad
 
+# Enable auto-login on tty1
+mkdir -p /etc/systemd/system/getty@tty1.service.d
+cat >/etc/systemd/system/getty@tty1.service.d/override.conf <<'EOF'
+[Service]
+ExecStart=
+ExecStart=-/sbin/agetty -o '-p -f -- \\u' --autologin peter --noclear %I $TERM
+EOF
+
 cat >/home/peter/.bash_profile <<'EOF'
 startxfce4
 EOF

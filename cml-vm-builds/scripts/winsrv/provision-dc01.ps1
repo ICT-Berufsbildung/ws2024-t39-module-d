@@ -64,8 +64,8 @@ Add-ADGroupMember -Identity "DL-FS_Marketing-Project-Alpha-RW" -Members weiss
 
 Write-Host "Create GPO"
 $gpo = New-GPO -Name "WSC2024_DO_NOT_ALLOW_REGEDIT"
-Set-GPRegistryValue -Name "WSC2024_DO_NOT_ALLOW_REGEDIT" -Key "HKCU\Software\Microsoft\Windows\CurrentVersion\Policies\System" -ValueName DisableRegistryTools -Type DWord -Value 0
-New-GPLink -Guid $gpo.Id -Target "DC=wsc2024,DC=local" -LinkEnabled Yes -Order 1
+Set-GPRegistryValue -Name "WSC2024_DO_NOT_ALLOW_REGEDIT" -Key "HKCU\Software\Microsoft\Windows\CurrentVersion\Policies\System" -ValueName DisableRegistryTools -Type DWord -Value 2
+New-GPLink -Guid $gpo.Id -Target "DC=wsc2024,DC=local" -LinkEnabled No -Order 1
 Set-GPPermissions -Name "WSC2024_DO_NOT_ALLOW_REGEDIT" -TargetName "GL-Marketing" -PermissionLevel GpoApply -TargetType 'Group'
 dsacls "cn={$($gpo.id)},cn=policies,$((Get-ADDomain).SystemsContainer)" /R "Authenticated Users"
 
@@ -151,10 +151,10 @@ $acl.SetAccessRule($roRule)
 
 Set-Acl -Path $marketingFolder -AclObject $acl
 
-
-New-Item -Path "$marketingFolder\PROJECT_ALPHA" -ItemType Directory
+$alpha_folder = "$marketingFolder\PROJECT_ALPHA"
+New-Item -Path $alpha_folder -ItemType Directory
 Write-Host "Set file permissions"
-$acl = Get-Acl -Path "$marketingFolder\PROJECT_ALPHA"
+$acl = Get-Acl -Path $alpha_folder
 # Define Full Control Group
 $fcRule = New-Object System.Security.AccessControl.FileSystemAccessRule("WSC2024\GL-IT","FullControl","ContainerInherit,ObjectInherit","None","Allow")
 # Define Modify Group
@@ -166,6 +166,8 @@ $acl.PurgeAccessRules($everyone)
 $acl.SetAccessRule($fcRule)
 # Add Modify Rule
 $acl.SetAccessRule($mdRule)
+
+Set-Acl -Path $alpha_folder -AclObject $acl
 
 # Block CSV file
 New-FsrmFileGroup -Name "WSC2024_Blacklist" -IncludePattern @("*.csv", "*.html")

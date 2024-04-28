@@ -197,7 +197,7 @@ nodes:
        switchport mode trunk
        switchport nonegotiate
        switchport port-security mac-address sticky
-       switchport port-security mac-address sticky d8bb.c1a4.e684
+       switchport port-security mac-address d8bb.c1a4.e684
        switchport port-security
        negotiation auto
        spanning-tree portfast edge
@@ -1310,6 +1310,7 @@ nodes:
        description TO-DCRTR01
        no switchport
        ip address 10.254.254.5 255.255.255.254
+       no ip unreachables
        ip ospf network point-to-point
        ipv6 address FE80::1 link-local
        ipv6 enable
@@ -1373,11 +1374,6 @@ nodes:
       !
       router ospf 1
        auto-cost reference-bandwidth 100000
-       passive-interface default
-       no passive-interface GigabitEthernet0/0
-       no passive-interface GigabitEthernet0/1
-       no passive-interface GigabitEthernet0/2
-       no passive-interface Port-channel1
        network 10.254.1.10 0.0.0.0 area 0
        network 10.254.254.0 0.0.0.255 area 0
       !
@@ -1399,11 +1395,6 @@ nodes:
       no service-routing capabilities-manager
       ipv6 router ospf 1
        auto-cost reference-bandwidth 100000
-       passive-interface default
-       no passive-interface GigabitEthernet0/0
-       no passive-interface GigabitEthernet0/1
-       no passive-interface GigabitEthernet0/2
-       no passive-interface Port-channel1
       !
       !
       !

@@ -129,7 +129,7 @@ mkdir /opt/customers-sync
 mkdir /data
 cat >/opt/customers-sync/sync.sh <<'EOF'
 #!/bin/bash
-wget -O /data/customers.csv ftp://wsc2024:Skills39@partner01.your-partner.com/customers.csv
+wget --timeout=10 --tries=1 -O /data/customers.csv ftp://wsc2024:Skills39@partner01.your-partner.com/customers.csv
 EOF
 
 chmod +x /opt/customers-sync/sync.sh
@@ -180,7 +180,7 @@ table inet filter {
         }
         chain output {
                 type filter hook output priority filter;
-                ip6 daddr 2001:ab12:10::10 drop
+                tcp dport 21 drop
         }
 }
 EOF

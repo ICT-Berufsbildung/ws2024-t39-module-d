@@ -7,7 +7,7 @@ device:
   interfaces:
     has_loopback_zero: false
     physical:
-      - Ethernet0
+      - ens3
     serial_ports: 1
     default_count: 1
 ui:
@@ -15,13 +15,14 @@ ui:
   label_prefix: lnx02-
   icon: server
   label: lnx02
+  description: '# WSC2024 lnx02 server'
 sim:
   linux_native:
     libvirt_domain_driver: kvm
     driver: server
     disk_driver: virtio
-    ram: 1024
-    cpus: 1
+    ram: 2048
+    cpus: 2
     cpu_limit: 100
     nic_driver: e1000
     video:

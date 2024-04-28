@@ -1,6 +1,6 @@
 id: lnx01
 general:
-  description: lnx01
+  description: Linux Server 01
   nature: server
   read_only: false
 device:
@@ -22,7 +22,7 @@ sim:
     driver: server
     disk_driver: virtio
     ram: 2048
-    cpus: 1
+    cpus: 2
     cpu_limit: 100
     nic_driver: virtio
     video:

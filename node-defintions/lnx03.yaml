@@ -1,6 +1,6 @@
-id: partner01
+id: lnx03
 general:
-  description: Partner Server (Debian)
+  description: Linux Server 03
   nature: server
   read_only: false
 device:
@@ -12,24 +12,24 @@ device:
     default_count: 1
 ui:
   visible: true
-  label_prefix: partner01-
+  label_prefix: lnx03-
   icon: server
-  label: partner01
-  description: '# WSC2024 Partner server'
+  label: lnx03
+  description: '# WSC2024 lnx03 server'
 sim:
   linux_native:
     libvirt_domain_driver: kvm
     driver: server
     disk_driver: virtio
-    ram: 1024
-    cpus: 1
+    ram: 2048
+    cpus: 2
     cpu_limit: 100
     nic_driver: e1000
     video:
       model: virtio
-      memory: 16
+      memory: 15
 boot:
-  timeout: 60
+  timeout: 29
 inherited:
   image:
     ram: true

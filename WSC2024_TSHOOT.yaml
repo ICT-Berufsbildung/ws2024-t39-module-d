@@ -130,9 +130,9 @@ nodes:
     configuration: |-
       Building configuration...
 
-      Current configuration : 3736 bytes
+      Current configuration : 3730 bytes
       !
-      ! Last configuration change at 10:02:06 UTC Sun Apr 21 2024
+      ! Last configuration change at 16:04:54 UTC Sun Apr 21 2024
       !
       version 15.2
       service timestamps debug datetime msec
@@ -643,7 +643,7 @@ nodes:
        ip address 10.1.0.3 255.255.254.0
        ip helper-address 10.1.64.10
        standby version 2
-       standby 100 ip 10.1.0.2
+       standby 100 ip 10.1.0.5
        standby 100 authentication md5 key-string Skills39
        standby 101 ipv6 autoconfig
        standby 101 authentication md5 key-string Skillss39
@@ -791,9 +791,9 @@ nodes:
     configuration: |-
       Building configuration...
 
-      Current configuration : 4149 bytes
+      Current configuration : 4152 bytes
       !
-      ! Last configuration change at 11:11:55 UTC Sun Apr 21 2024
+      ! Last configuration change at 15:42:40 UTC Sat Apr 27 2024
       !
       version 15.9
       service timestamps debug datetime msec
@@ -1009,9 +1009,9 @@ nodes:
     configuration: |-
       Building configuration...
 
-      Current configuration : 4748 bytes
+      Current configuration : 4751 bytes
       !
-      ! Last configuration change at 10:56:14 UTC Sun Apr 21 2024
+      ! Last configuration change at 14:54:41 UTC Sat Apr 27 2024
       !
       version 15.9
       service timestamps debug datetime msec
@@ -1244,9 +1244,9 @@ nodes:
     configuration: |-
       Building configuration...
 
-      Current configuration : 4667 bytes
+      Current configuration : 4996 bytes
       !
-      ! Last configuration change at 09:14:06 UTC Sun Apr 21 2024
+      ! Last configuration change at 13:59:58 UTC Sat Apr 27 2024
       !
       version 15.2
       service timestamps debug datetime msec
@@ -1303,8 +1303,11 @@ nodes:
        ip ospf network point-to-point
        ipv6 address 2001:DB8:CAFE:254::10/128
        ipv6 enable
+       ipv6 ospf 1 area 0
+       ipv6 ospf network point-to-point
       !
       interface Port-channel1
+       description TO-DCRTR01
        no switchport
        ip address 10.254.254.5 255.255.255.254
        ip ospf network point-to-point
@@ -1337,6 +1340,7 @@ nodes:
        description TO-INET
        no switchport
        ip address 10.254.254.7 255.255.255.254
+       ip access-group FILTER-BOGUS-OUT out
        ip ospf network point-to-point
        negotiation auto
        ipv6 enable
@@ -1345,20 +1349,20 @@ nodes:
        no cdp tlv app
       !
       interface GigabitEthernet0/3
-       description TO-DCRTR01
        no switchport
        no ip address
        negotiation auto
-       ipv6 ospf network point-to-point
        channel-group 1 mode active
       !
       interface GigabitEthernet1/0
        no switchport
        no ip address
        negotiation auto
-       channel-group 1 mode passive
+       channel-group 1 mode active
       !
       interface GigabitEthernet1/1
+       no switchport
+       no ip address
        negotiation auto
       !
       interface GigabitEthernet1/2
@@ -1385,6 +1389,12 @@ nodes:
       ip ssh server algorithm encryption aes128-ctr aes192-ctr aes256-ctr
       ip ssh client algorithm encryption aes128-ctr aes192-ctr aes256-ctr
       !
+      ip access-list extended FILTER-BOGUS-OUT
+       deny   ip any host 87.14.146.14
+       deny   tcp any host 73.3.17.98 eq www
+       deny   tcp any host 154.56.200.211 eq www
+       deny   icmp any host 8.8.8.8
+       permit ip any any
       !
       no service-routing capabilities-manager
       ipv6 router ospf 1
@@ -1569,7 +1579,7 @@ nodes:
        no switchport
        no ip address
        negotiation auto
-       channel-group 1 mode passive
+       channel-group 1 mode active
       !
       interface GigabitEthernet0/2
        switchport access vlan 200
@@ -1614,7 +1624,6 @@ nodes:
       router ospf 1
        auto-cost reference-bandwidth 100000
        passive-interface default
-       no passive-interface GigabitEthernet0/0
        no passive-interface Port-channel1
        network 10.1.64.0 0.0.0.255 area 0
        network 10.254.1.13 0.0.0.0 area 0
@@ -1752,44 +1761,6 @@ nodes:
     hide_links: false
     id: n8
     image_definition: null
-    label: ws02
-    node_definition: ws02
-    ram: null
-    tags: []
-    x: -480
-    y: -160
-    interfaces:
-      - id: i0
-        label: Ethernet
-        slot: 0
-        type: physical
-  - boot_disk_size: null
-    configuration: null
-    cpu_limit: null
-    cpus: null
-    data_volume: null
-    hide_links: false
-    id: n9
-    image_definition: null
-    label: partner01-0
-    node_definition: partner01
-    ram: null
-    tags: []
-    x: 760
-    y: -200
-    interfaces:
-      - id: i0
-        label: Ethernet0
-        slot: 0
-        type: physical
-  - boot_disk_size: null
-    configuration: null
-    cpu_limit: null
-    cpus: null
-    data_volume: null
-    hide_links: false
-    id: n10
-    image_definition: null
     label: dc01
     node_definition: dc01
     ram: null
@@ -1807,7 +1778,7 @@ nodes:
     cpus: null
     data_volume: null
     hide_links: false
-    id: n11
+    id: n9
     image_definition: null
     label: ws01
     node_definition: ws01
@@ -1826,26 +1797,7 @@ nodes:
     cpus: null
     data_volume: null
     hide_links: false
-    id: n12
-    image_definition: null
-    label: lnx02
-    node_definition: lnx02
-    ram: null
-    tags: []
-    x: 400
-    y: 80
-    interfaces:
-      - id: i0
-        label: Ethernet0
-        slot: 0
-        type: physical
-  - boot_disk_size: null
-    configuration: null
-    cpu_limit: null
-    cpus: null
-    data_volume: null
-    hide_links: false
-    id: n13
+    id: n10
     image_definition: null
     label: lnx03
     node_definition: lnx03
@@ -1857,6 +1809,252 @@ nodes:
       - id: i0
         label: ens3
         slot: 0
+        type: physical
+  - boot_disk_size: null
+    configuration: null
+    cpu_limit: null
+    cpus: null
+    data_volume: null
+    hide_links: false
+    id: n11
+    image_definition: null
+    label: partner01
+    node_definition: partner01
+    ram: null
+    tags: []
+    x: 800
+    y: -200
+    interfaces:
+      - id: i0
+        label: ens3
+        slot: 0
+        type: physical
+  - boot_disk_size: null
+    configuration: null
+    cpu_limit: null
+    cpus: null
+    data_volume: null
+    hide_links: false
+    id: n12
+    image_definition: null
+    label: lnx02
+    node_definition: lnx02
+    ram: null
+    tags: []
+    x: 400
+    y: 80
+    interfaces:
+      - id: i0
+        label: ens3
+        slot: 0
+        type: physical
+  - boot_disk_size: null
+    configuration: null
+    cpu_limit: null
+    cpus: null
+    data_volume: null
+    hide_links: false
+    id: n13
+    image_definition: null
+    label: ws02
+    node_definition: ws02
+    ram: null
+    tags: []
+    x: -480
+    y: -160
+    interfaces:
+      - id: i0
+        label: ens3
+        slot: 0
+        type: physical
+  - boot_disk_size: null
+    configuration: |-
+      Building configuration...
+
+      Current configuration : 3233 bytes
+      !
+      ! Last configuration change at 17:13:35 UTC Sat Apr 27 2024
+      !
+      version 15.9
+      service timestamps debug datetime msec
+      service timestamps log datetime msec
+      no service password-encryption
+      !
+      hostname LABRTR01
+      !
+      boot-start-marker
+      boot-end-marker
+      !
+      !
+      no logging console
+      !
+      no aaa new-model
+      !
+      !
+      !
+      mmi polling-interval 60
+      no mmi auto-configure
+      no mmi pvc
+      mmi snmp-timeout 180
+      !
+      !
+      !
+      !
+      !
+      !
+      !
+      !
+      !
+      !
+      !
+      ip cef
+      ipv6 unicast-routing
+      ipv6 cef
+      !
+      multilink bundle-name authenticated
+      !
+      !
+      !
+      !
+      !
+      redundancy
+      !
+      !
+      !
+      !
+      !
+      !
+      !
+      !
+      !
+      !
+      !
+      !
+      !
+      !
+      !
+      interface Loopback0
+       ip address 10.254.1.15 255.255.255.255
+       ipv6 address 2001:DB8:CAFE:254::15/128
+       ipv6 enable
+       ipv6 ospf 1 area 0
+       ipv6 ospf network point-to-point
+      !
+      interface GigabitEthernet0/0
+       no ip address
+       duplex auto
+       speed auto
+       media-type rj45
+       ipv6 enable
+       ipv6 ospf 1 area 1
+      !
+      interface GigabitEthernet0/1
+       no ip address
+       shutdown
+       duplex auto
+       speed auto
+       media-type rj45
+      !
+      interface GigabitEthernet0/2
+       no ip address
+       shutdown
+       duplex auto
+       speed auto
+       media-type rj45
+      !
+      interface GigabitEthernet0/3
+       no ip address
+       shutdown
+       duplex auto
+       speed auto
+       media-type rj45
+      !
+      router ospf 1
+      !
+      ip forward-protocol nd
+      !
+      !
+      no ip http server
+      no ip http secure-server
+      !
+      ipv6 router ospf 1
+      !
+      ipv6 ioam timestamp
+      !
+      !
+      !
+      control-plane
+      !
+      banner exec ^C
+      **************************************************************************
+      * IOSv is strictly limited to use for evaluation, demonstration and IOS  *
+      * education. IOSv is provided as-is and is not supported by Cisco's      *
+      * Technical Advisory Center. Any use or disclosure, in whole or in part, *
+      * of the IOSv Software or Documentation to any third party for any       *
+      * purposes is expressly prohibited except as otherwise authorized by     *
+      * Cisco in writing.                                                      *
+      **************************************************************************^C
+      banner incoming ^C
+      **************************************************************************
+      * IOSv is strictly limited to use for evaluation, demonstration and IOS  *
+      * education. IOSv is provided as-is and is not supported by Cisco's      *
+      * Technical Advisory Center. Any use or disclosure, in whole or in part, *
+      * of the IOSv Software or Documentation to any third party for any       *
+      * purposes is expressly prohibited except as otherwise authorized by     *
+      * Cisco in writing.                                                      *
+      **************************************************************************^C
+      banner login ^C
+      **************************************************************************
+      * IOSv is strictly limited to use for evaluation, demonstration and IOS  *
+      * education. IOSv is provided as-is and is not supported by Cisco's      *
+      * Technical Advisory Center. Any use or disclosure, in whole or in part, *
+      * of the IOSv Software or Documentation to any third party for any       *
+      * purposes is expressly prohibited except as otherwise authorized by     *
+      * Cisco in writing.                                                      *
+      **************************************************************************^C
+      !
+      line con 0
+       exec-timeout 0 0
+      line aux 0
+      line vty 0 4
+       exec-timeout 0 0
+       login
+       transport input none
+      !
+      no scheduler allocate
+      !
+      end
+    cpu_limit: null
+    cpus: null
+    data_volume: null
+    hide_links: false
+    id: n14
+    image_definition: null
+    label: LABRTR01
+    node_definition: iosv
+    ram: null
+    tags: []
+    x: 0
+    y: -80
+    interfaces:
+      - id: i0
+        label: Loopback0
+        type: loopback
+      - id: i1
+        label: GigabitEthernet0/0
+        slot: 0
+        type: physical
+      - id: i2
+        label: GigabitEthernet0/1
+        slot: 1
+        type: physical
+      - id: i3
+        label: GigabitEthernet0/2
+        slot: 2
+        type: physical
+      - id: i4
+        label: GigabitEthernet0/3
+        slot: 3
         type: physical
 links:
   - id: l0
@@ -1909,61 +2107,68 @@ links:
     conditioning: {}
     label: iosvl2-1-GigabitEthernet0/3<->iosvl2-2-GigabitEthernet0/0
   - id: l7
-    n1: n11
+    n1: n9
     n2: n0
     i1: i0
     i2: i1
     conditioning: {}
     label: ws01-0-Ethernet<->HQSW01-GigabitEthernet0/0
   - id: l8
-    n1: n8
-    n2: n0
-    i1: i0
-    i2: i2
-    conditioning: {}
-    label: ws02-0-Ethernet<->HQSW01-GigabitEthernet0/1
-  - id: l9
-    n1: n9
-    n2: n3
-    i1: i0
-    i2: i2
-    conditioning: {}
-    label: partner01-0-Ethernet0<->ISP-GigabitEthernet0/1
-  - id: l10
     n1: n6
     n2: n5
     i1: i2
     i2: i5
     conditioning: {}
     label: DCRTR01-GigabitEthernet0/1<->CORERTR01-GigabitEthernet1/0
-  - id: l11
+  - id: l9
     n1: n6
     n2: n7
     i1: i3
     i2: i0
     conditioning: {}
     label: DCRTR01-GigabitEthernet0/2<->lnx01-ens3
-  - id: l12
+  - id: l10
     n1: n6
-    n2: n10
+    n2: n8
     i1: i4
     i2: i0
     conditioning: {}
     label: DCRTR01-GigabitEthernet0/3<->dc01-0-Ethernet0
-  - id: l13
-    n1: n6
-    n2: n12
-    i1: i5
-    i2: i0
-    conditioning: {}
-    label: DCRTR01-GigabitEthernet1/0<->lnx02-0-Ethernet0
-  - id: l14
-    n1: n13
+  - id: l11
+    n1: n10
     n2: n6
     i1: i0
     i2: i6
     conditioning: {}
     label: lnx03-0-ens3<->DCRTR01-GigabitEthernet1/1
+  - id: l12
+    n1: n11
+    n2: n3
+    i1: i0
+    i2: i2
+    conditioning: {}
+    label: partner01-0-ens3<->ISP-GigabitEthernet0/1
+  - id: l13
+    n1: n13
+    n2: n0
+    i1: i0
+    i2: i2
+    conditioning: {}
+    label: ws02-0-ens3<->HQSW01-GigabitEthernet0/1
+  - id: l14
+    n1: n12
+    n2: n6
+    i1: i0
+    i2: i5
+    conditioning: {}
+    label: lnx02-0-ens3<->DCRTR01-GigabitEthernet1/0
+  - id: l15
+    n1: n14
+    n2: n5
+    i1: i1
+    i2: i6
+    conditioning: {}
+    label: LABRTR01-GigabitEthernet0/0<->CORERTR01-GigabitEthernet1/1
 lab:
   description: ''
   notes: |-

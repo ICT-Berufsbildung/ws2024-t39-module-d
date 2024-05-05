@@ -746,10 +746,10 @@ nodes:
       line aux 0
       line vty 0 4
        exec-timeout 0 0
-       no login
+       login local
        transport input telnet ssh
       line vty 5 15
-       no login
+       login local
        transport input telnet ssh
       !
       no scheduler allocate

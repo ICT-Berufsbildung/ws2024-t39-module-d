@@ -23,6 +23,12 @@ $settings = New-ScheduledTaskSettingsSet
 $settings.Priority = 4
 Set-ScheduledTask -TaskPath $psJobsPathInScheduler -TaskName "WSC2024_DOMAINJOIN" -Principal $principal -Settings $settings
 
+# CSV file
+Write-Host "CSV file download"
+New-Item -ItemType Directory -Force -Path 'C:\data' | Out-Null
+$ProgressPreference = 'SilentlyContinue'
+Invoke-WebRequest -Uri $Env:PACKER_HTTP_ADDR/popular_influencers.csv -OutFile "C:\data\popular_influencers.csv"
+
 # Break pwsh path
 $removePath = 'C:\Program Files\Powershell\7\'
 $addPath = 'C:\Program Files\Powershell\asdf\'

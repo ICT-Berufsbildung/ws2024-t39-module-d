@@ -31,7 +31,7 @@ nameserver 2001:db8:cafe:200::20
 EOF
 
 # Increase boot timeout
-sed -Ei 's/#?\s*(GRUB_TIMEOUT)\s+.*$/\1 30/g' /etc/default/grub
+sed -Ei 's/#?\s*(GRUB_TIMEOUT).*$/\1=60/g' /etc/default/grub
 update-grub
 
 # Deploy network interface configuration

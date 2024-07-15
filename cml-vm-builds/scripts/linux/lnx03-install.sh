@@ -67,7 +67,10 @@ systemctl enable squid
 systemctl start squid
 
 # Overwrite default Apache page for compact output
-echo 'Welcome to NEW webpage WSC2024.org' >/var/www/html/index.html
+echo 'Welcome to the NEW webpage of WSC2024.org' >/var/www/html/index.html
+cp -r /tmp/wwwroot/assets /var/www/html/
+cp -r /tmp/wwwroot/images /var/www/html/
+cp /tmp/wwwroot/lnx03.html /var/www/html/
 
 # Disable package repositories
 rm -f /etc/apt/sources.list.d/*

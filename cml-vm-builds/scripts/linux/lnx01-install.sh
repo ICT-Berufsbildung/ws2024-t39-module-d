@@ -50,9 +50,13 @@ cat >/etc/apt/sources.list <<'EOF'
 EOF
 
 # Overwrite default Apache page for compact output
-echo 'Welcome to WSC2024.org' >/var/www/html/index.html
+cp -r /tmp/wwwroot/assets /var/www/html/
+cp -r /tmp/wwwroot/images /var/www/html/
+cp /tmp/wwwroot/index.html /var/www/html/
 mkdir -p /var/www/secret
-echo 'Welcome to Secret app at WSC2024.org' > /var/www/secret/index.html
+cp -r /tmp/wwwroot/assets /var/www/secret/
+cp -r /tmp/wwwroot/images /var/www/secret/
+cp /tmp/wwwroot/secret.html /var/www/secret/index.html
 
 cat >/etc/apache2/sites-available/secret.conf <<'EOF'
 <VirtualHost *:8080>

@@ -124,6 +124,12 @@ source "qemu" "ws02" {
 build {
   sources = ["source.qemu.lnx01", "source.qemu.lnx02", "source.qemu.lnx03", "source.qemu.ws02", "source.qemu.partner01"]
 
+  provisioner "file" {
+    only   = ["qemu.lnx01", "qemu.lnx03"]
+    source = "./scripts/linux/wwwroot"
+    destination = "/tmp"
+  }
+
   provisioner "shell" {
     only   = ["qemu.lnx01"]
     execute_command = "chmod +x {{ .Path }}; sudo -E -S {{ .Path }}"

@@ -2,7 +2,6 @@ Import-Module ActiveDirectory
 
 Set-ADDefaultDomainPasswordPolicy -Identity wsc2024.local -ComplexityEnabled $False -MinPasswordLength 4
 
-
 New-ADOrganizationalUnit -Name "HQ" -Path "DC=wsc2024,DC=local"
 New-ADOrganizationalUnit -Name "Groups" -Path "OU=HQ,DC=wsc2024,DC=local"
 New-ADOrganizationalUnit -Name "IT" -Path "OU=HQ,DC=wsc2024,DC=local"
@@ -74,6 +73,53 @@ Set-GPRegistryValue -Name "WSC2024_Proxy" -Key "HKCU\Software\Microsoft\Windows\
 Set-GPRegistryValue -Name "WSC2024_Proxy" -Key "HKCU\Software\Microsoft\Windows\CurrentVersion\Internet Settings" -ValueName ProxyEnable -Type DWord -Value 1
 Set-GPRegistryValue -Name "WSC2024_Proxy" -Key "HKCU\Software\Microsoft\Windows\CurrentVersion\Internet Settings" -ValueName ProxyOverride -Type String -Value "*.wsc2024.local;10.*;"
 New-GPLink -Guid $gpo.Id -Target "DC=wsc2024,DC=local" -LinkEnabled Yes -Order 2
+
+$domain = "wsc2024.local"
+
+$gpname = "WSC2024_GroupShares"
+$filterGroupSidFinance = (Get-ADGroup -Identity GL-Finance).SID
+$filterGroupSidMarketing = (Get-ADGroup -Identity GL-Marketing).SID
+
+$mount_template = @"
+<?xml version="1.0" encoding="utf-8"?>
+<Drives clsid="{8FDDCC1A-0C3C-43cd-A6B4-71A6DF20DA8C}">
+	<Drive clsid="{935D1B74-9CB8-4e3c-9914-7DD559B7A417}" name="Z:" status="Z:" image="2" userContext="1" changed="$((get-date -Format "yyyy-MM-dd HH:mm:ss"))" uid="{$((New-Guid).ToString().ToUpper())}" bypassErrors="1">
+		<Properties action="U" thisDrive="SHOW" allDrives="NOCHANGE" userName="" path="\\dc01.wsc2024.local\Finance" label="Finance" persistent="1" useLetter="1" letter="Z"/>
+        <Filters>
+            <FilterGroup bool="AND" not="0" name="$($domain)\GL-Finance" sid="$($filterGroupSidFinance)" userContext="1" primaryGroup="0" localGroup="0"/>
+        </Filters>
+	</Drive>
+    <Drive clsid="{935D1B74-9CB8-4e3c-9914-7DD559B7A417}" name="Z:" status="Z:" image="2" userContext="1" changed="$((get-date -Format "yyyy-MM-dd HH:mm:ss"))" uid="{$((New-Guid).ToString().ToUpper())}" bypassErrors="1">
+		<Properties action="U" thisDrive="SHOW" allDrives="NOCHANGE" userName="" path="\\dc01.wsc2024.local\Marketing" label="Marketing" persistent="1" useLetter="1" letter="Z"/>
+        <Filters>
+            <FilterGroup bool="AND" not="0" name="$($domain)\GL-Marketing" sid="$($filterGroupSidMarketing)" userContext="1" primaryGroup="0" localGroup="0"/>
+        </Filters>
+	</Drive>
+</Drives>
+"@
+
+$gpo = New-GPO -Name $gpname
+New-GPLink -Guid $gpo.Id -Target "DC=wsc2024,DC=local" -LinkEnabled Yes -Order 3
+
+$baseurl = "\\$domain\sysvol\$domain\Policies\{" + $gpo.Id + "}"
+
+$drives_dir = $baseurl + "\User\Preferences\Drives"
+$drives_xml =  $drives_dir + "\Drives.xml"
+
+New-Item -ItemType Directory -Path $drives_dir -ErrorAction Ignore
+$mount_template | Out-File -FilePath $drives_xml -NoClobber -Force -Encoding utf8
+
+$gptini_path =  $baseurl + "\GPT.INI"
+
+$gptini_content = @"
+[General]
+displayName=WSC2024 group shares
+Version=393216
+"@
+
+$gptini_content | Out-File -FilePath $gptini_path -Force -Encoding utf8
+
+Set-ADObject -Identity $gpo.Path -Add @{gPCUserExtensionnames='[{00000000-0000-0000-0000-000000000000}{2EA1A81B-48E5-45E9-8BB7-A6E3AC170006}][{5794DAFD-BE60-433F-88A2-1A31939AC01F}{2EA1A81B-48E5-45E9-8BB7-A6E3AC170006}]'}
 
 Write-Host "Create DNS reverse zones"
 Add-DnsServerPrimaryZone -NetworkID "10.1.64.0/24" -ReplicationScope "Forest"

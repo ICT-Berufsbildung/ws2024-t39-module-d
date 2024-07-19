@@ -12,8 +12,8 @@ useradd -u 2001 -g lisa -d /home/lisa -m -s /bin/bash lisa
 groupadd -g 2002 remoteworkers
 usermod -a -G remoteworkers lisa
 usermod -a -G remoteworkers sysop
-echo 'john:Skills39' | chpasswd
-echo 'lisa:Skills39' | chpasswd
+echo 'john:Skill39@Lyon' | chpasswd
+echo 'lisa:Skill39@Lyon' | chpasswd
 
 # Install required packages unattended
 export DEBIAN_FRONTEND=noninteractive
@@ -133,7 +133,7 @@ mkdir /opt/customers-sync
 mkdir /data
 cat >/opt/customers-sync/sync.sh <<'EOF'
 #!/bin/bash
-wget --timeout=10 --tries=1 -O /data/customers.csv ftp://wsc2024:Skills39@partner01.your-partner.com/customers.csv
+wget --timeout=10 --tries=1 -O /data/customers.csv ftp://wsc2024:Skill39@Lyon@partner01.your-partner.com/customers.csv
 EOF
 
 chmod +x /opt/customers-sync/sync.sh

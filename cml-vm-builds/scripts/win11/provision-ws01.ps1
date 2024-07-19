@@ -6,7 +6,7 @@ $psJobsPathInScheduler = "\";
 Register-ScheduledJob -Name "WSC2024_DOMAINJOIN" -Trigger $trigger -ScriptBlock {    
     # Pause for 5 seconds per loop
     while ((gwmi win32_computersystem).partofdomain -eq $false) {   
-        $password = "Skills39" | ConvertTo-SecureString -asPlainText -Force
+        $password = "Skill39@Lyon" | ConvertTo-SecureString -asPlainText -Force
         $username = "WSC2024\sysop" 
         $credential = New-Object System.Management.Automation.PSCredential($username,$password)
         try {

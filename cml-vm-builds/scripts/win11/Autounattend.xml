@@ -103,13 +103,13 @@
             <TimeZone>Europe/Paris</TimeZone>
             <UserAccounts>
                 <AdministratorPassword>
-                    <Value>Skills39</Value>
+                    <Value>Skill39@Lyon</Value>
                     <PlainText>true</PlainText>
                 </AdministratorPassword>
                 <LocalAccounts>
                     <LocalAccount wcm:action="add">
                         <Password>
-                            <Value>Skills39</Value>
+                            <Value>Skill39@Lyon</Value>
                             <PlainText>true</PlainText>
                         </Password>
                         <Description>sysop</Description>
@@ -121,7 +121,7 @@
             </UserAccounts>
             <AutoLogon>
                 <Password>
-                    <Value>Skills39</Value>
+                    <Value>Skill39@Lyon</Value>
                     <PlainText>true</PlainText>
                 </Password>
                 <Enabled>true</Enabled>

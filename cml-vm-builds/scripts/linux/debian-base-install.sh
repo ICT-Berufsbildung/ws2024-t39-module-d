@@ -2,6 +2,9 @@
 set -euxo pipefail
 IFS=$'\n\t'
 
+# Set root password
+echo 'root:Skill39@Lyon' | chpasswd
+
 # Configure sudo
 cat >/etc/sudoers <<'EOF'
 Defaults env_reset

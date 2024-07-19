@@ -148,7 +148,7 @@ nodes:
       !
       no logging console
       !
-      username admin password 0 Skills39
+      username admin password 0 Skill39@Lyon
       no aaa new-model
       !
       !
@@ -411,11 +411,11 @@ nodes:
        standby 100 ip 10.1.0.1
        standby 100 priority 110
        standby 100 preempt delay minimum 180
-       standby 100 authentication md5 key-string Skills39
+       standby 100 authentication md5 key-string Skill39@Lyon
        standby 101 ipv6 autoconfig
        standby 101 priority 110
        standby 101 preempt delay minimum 180
-       standby 101 authentication md5 key-string Skills39
+       standby 101 authentication md5 key-string Skill39@Lyon
        ipv6 address 2001:DB8:CAFE:100::2/64
        ipv6 enable
        ipv6 ospf 1 area 0
@@ -427,11 +427,11 @@ nodes:
        standby 150 ip 10.1.128.1
        standby 150 priority 110
        standby 150 preempt delay minimum 180
-       standby 150 authentication md5 key-string Skills39
+       standby 150 authentication md5 key-string Skill39@Lyon
        standby 151 ipv6 autoconfig
        standby 151 priority 110
        standby 151 preempt delay minimum 180
-       standby 151 authentication md5 key-string Skills39
+       standby 151 authentication md5 key-string Skill39@Lyon
        ipv6 address 2001:DB8:CAFE:150::2/64
        ipv6 enable
        ipv6 ospf 1 area 0
@@ -608,7 +608,7 @@ nodes:
       !
       !
       !
-      username admin privilege 15 password 0 Skills39
+      username admin privilege 15 password 0 Skill39@Lyon
       !
       redundancy
       !
@@ -644,7 +644,7 @@ nodes:
        ip helper-address 10.1.64.10
        standby version 2
        standby 100 ip 10.1.0.5
-       standby 100 authentication md5 key-string Skills39
+       standby 100 authentication md5 key-string Skill39@Lyon
        standby 101 ipv6 autoconfig
        standby 101 authentication md5 key-string Skillss39
        ipv6 address 2001:DB8:CAFE:100::3/64
@@ -656,9 +656,9 @@ nodes:
        ip address 10.1.128.3 255.255.255.128
        standby version 2
        standby 150 ip 10.1.128.1
-       standby 150 authentication md5 key-string Skills39
+       standby 150 authentication md5 key-string Skill39@Lyon
        standby 151 ipv6 autoconfig
-       standby 151 authentication md5 key-string Skills39
+       standby 151 authentication md5 key-string Skill39@Lyon
        ipv6 address 2001:DB8:CAFE:150::3/64
        ipv6 enable
        ipv6 ospf 1 area 0
@@ -2170,9 +2170,9 @@ lab:
     ## Credentials
     ### Cisco devices
     * username: admin
-    * password: Skills39
+    * password: Skill39@Lyon
     ### Windows & Linux machines
     * username: sysop
-    * password: Skills39
+    * password: Skill39@Lyon
   title: WSC2024_TSHOOT
   version: 0.2.1

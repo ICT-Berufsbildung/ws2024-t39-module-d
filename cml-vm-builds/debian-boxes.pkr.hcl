@@ -25,7 +25,7 @@ source "qemu" "lnx01" {
   headless = true
   http_directory = "http"
   ssh_username = "sysop"
-  ssh_password = "Skills39"
+  ssh_password = "Skill39@Lyon"
   ssh_timeout = "15m"
   shutdown_command = "sudo -S /sbin/shutdown -h now"
 }
@@ -48,7 +48,7 @@ source "qemu" "lnx02" {
   headless = true
   http_directory = "http"
   ssh_username = "sysop"
-  ssh_password = "Skills39"
+  ssh_password = "Skill39@Lyon"
   ssh_timeout = "15m"
   shutdown_command = "sudo -S /sbin/shutdown -h now"
 }
@@ -70,7 +70,7 @@ source "qemu" "lnx03" {
   headless = true
   http_directory = "http"
   ssh_username = "sysop"
-  ssh_password = "Skills39"
+  ssh_password = "Skill39@Lyon"
   ssh_timeout = "15m"
   shutdown_command = "sudo -S /sbin/shutdown -h now"
 }
@@ -93,7 +93,7 @@ source "qemu" "partner01" {
   headless = true
   http_directory = "http"
   ssh_username = "sysop"
-  ssh_password = "Skills39"
+  ssh_password = "Skill39@Lyon"
   ssh_timeout = "15m"
   shutdown_command = "sudo -S /sbin/shutdown -h now"
 }
@@ -116,7 +116,7 @@ source "qemu" "ws02" {
   headless = true
   http_directory = "http"
   ssh_username = "sysop"
-  ssh_password = "Skills39"
+  ssh_password = "Skill39@Lyon"
   ssh_timeout = "15m"
   shutdown_command = "sudo -S /sbin/shutdown -h now"
 }

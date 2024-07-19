@@ -7,7 +7,7 @@ ifname=$(ip route get 8.8.8.8 | sed -n 's/.*dev \([^\ ]*\).*/\1/p')
 
 groupadd -g 2000 peter
 useradd -u 2000 -g peter -d /home/peter -m -s /bin/bash peter
-echo 'peter:Skills39' | chpasswd
+echo 'peter:Skill39@Lyon' | chpasswd
 
 # Install required packages unattended
 export DEBIAN_FRONTEND=noninteractive

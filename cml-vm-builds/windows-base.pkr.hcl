@@ -74,7 +74,7 @@ source "qemu" "win11-base" {
     "scripts/win11/Autounattend.xml",
   ]
   format                   = "qcow2"
-  headless                 = false
+  headless                 = true
   net_device               = "e1000"
   http_directory           = "."
   iso_url                  = var.win11_iso_url
@@ -82,7 +82,7 @@ source "qemu" "win11-base" {
   shutdown_command         = "shutdown /s /t 0 /f /d p:4:1 /c \"Packer Shutdown\""
   communicator             = "ssh"
   ssh_username             = "sysop"
-  ssh_password             = "Skills39"
+  ssh_password             = "Skill39@Lyon"
   ssh_timeout              = "4h"
   ssh_file_transfer_method = "sftp"
 }
@@ -134,7 +134,7 @@ source "qemu" "winsrv-base" {
     "scripts/winsrv/Autounattend.xml",
   ]
   format                   = "qcow2"
-  headless                 = false
+  headless                 = true
   net_device               = "e1000"
   http_directory           = "."
   iso_url                  = var.winsrv_iso_url
@@ -142,9 +142,10 @@ source "qemu" "winsrv-base" {
   shutdown_command         = "shutdown /s /t 0 /f /d p:4:1 /c \"Packer Shutdown\""
   communicator             = "ssh"
   ssh_username             = "sysop"
-  ssh_password             = "Skills39"
+  ssh_password             = "Skill39@Lyon"
   ssh_timeout              = "4h"
   ssh_file_transfer_method = "sftp"
+  vnc_bind_address = "0.0.0.0"
 }
 
 

@@ -43,7 +43,7 @@ source "qemu" "dc01" {
   shutdown_command         = "shutdown /s /t 0 /f /d p:4:1 /c \"Packer Shutdown\""
   communicator             = "ssh"
   ssh_username             = "sysop"
-  ssh_password             = "Skills39"
+  ssh_password             = "Skill39@Lyon"
   ssh_timeout              = "4h"
   ssh_file_transfer_method = "sftp"
 }
@@ -82,7 +82,7 @@ source "qemu" "ws01" {
   shutdown_command         = "shutdown /s /t 0 /f /d p:4:1 /c \"Packer Shutdown\""
   communicator             = "ssh"
   ssh_username             = "sysop"
-  ssh_password             = "Skills39"
+  ssh_password             = "Skill39@Lyon"
   ssh_timeout              = "4h"
   ssh_file_transfer_method = "sftp"
 }

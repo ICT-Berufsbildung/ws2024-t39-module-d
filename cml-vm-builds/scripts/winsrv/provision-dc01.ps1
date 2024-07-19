@@ -37,7 +37,7 @@ Write-Host "Create users"
 foreach ($u in $users){
     $item = $u.Split(" ")
     $username = $item[1].ToLower()
-    New-ADUser -Name $u -SamAccountName $username -UserPrincipalName "$username@wsc2024.local" -AccountPassword (ConvertTo-SecureString "Skills39" -AsPlainText -Force) -Enable $true -ChangePasswordAtLogon $false -PasswordNeverExpires $true
+    New-ADUser -Name $u -SamAccountName $username -UserPrincipalName "$username@wsc2024.local" -AccountPassword (ConvertTo-SecureString "Skill39@Lyon" -AsPlainText -Force) -Enable $true -ChangePasswordAtLogon $false -PasswordNeverExpires $true
 }
 
 $Logonhours = [byte[]]$LogonHours = @(0,0,0, 0,0,0, 0,0,0, 0,0,0, 0,0,0, 0,0,0, 0,0,0)

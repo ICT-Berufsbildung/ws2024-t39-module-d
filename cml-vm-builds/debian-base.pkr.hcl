@@ -22,10 +22,10 @@ source "qemu" "debian-base" {
   memory = "4096"
   cpus = 2
 
-  headless = false
+  headless = true
   http_directory = "http"
   ssh_username = "sysop"
-  ssh_password = "Skills39"
+  ssh_password = "Skill39@Lyon"
   ssh_timeout = "15m"
   boot_command = [
     "<esc><wait>",
@@ -39,7 +39,7 @@ build {
   sources = ["source.qemu.debian-base"]
 
   provisioner "shell" {
-    execute_command = "chmod +x {{ .Path }}; echo 'Skills39' | sudo -S {{ .Path }}"
+    execute_command = "chmod +x {{ .Path }}; echo 'Skill39@Lyon' | sudo -S {{ .Path }}"
     script = "./scripts/linux/debian-base-install.sh"
   }
 }

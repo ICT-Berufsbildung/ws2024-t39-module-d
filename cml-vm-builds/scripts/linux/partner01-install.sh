@@ -6,7 +6,7 @@ ifname=$(ip route get 8.8.8.8 | sed -n 's/.*dev \([^\ ]*\).*/\1/p')
 
 groupadd -g 2000 wsc2024
 useradd -u 2000 -g wsc2024 -d /home/wsc2024 -m -s /usr/sbin/nologin wsc2024
-echo 'wsc2024:Skills39' | chpasswd
+echo 'wsc2024:Skill39@Lyon' | chpasswd
 
 # Install required packages unattended
 export DEBIAN_FRONTEND=noninteractive

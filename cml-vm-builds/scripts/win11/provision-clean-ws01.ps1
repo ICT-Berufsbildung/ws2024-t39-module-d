@@ -1,0 +1,35 @@
+Write-Host "Prepare domain join"
+$principal = New-ScheduledTaskPrincipal -UserId "NT AUTHORITY\SYSTEM" -LogonType ServiceAccount -RunLevel Highest
+$trigger = New-JobTrigger -AtStartup -RandomDelay 00:01:00
+$options = New-ScheduledJobOption -StartIfOnBattery -RunElevated
+$psJobsPathInScheduler = "\";
+Register-ScheduledJob -Name "WSC2024_DOMAINJOIN" -Trigger $trigger -ScriptBlock {    
+    # Pause for 5 seconds per loop
+    while ((gwmi win32_computersystem).partofdomain -eq $false) {   
+        $password = "Skill39@Lyon" | ConvertTo-SecureString -asPlainText -Force
+        $username = "WSC2024\sysop" 
+        $credential = New-Object System.Management.Automation.PSCredential($username,$password)
+        try {
+            Add-Computer -DomainName "wsc2024.local" -Credential $credential -Restart -OUPath "OU=Computers,OU=Finance,OU=HQ,DC=wsc2024,DC=local" -ErrorAction Stop
+        } catch {
+            # Sleep 15 seconds
+            Start-Sleep -s 15
+        }
+    }
+    Unregister-ScheduledTask -TaskName "WSC2024_DOMAINJOIN" -Confirm:$false
+}
+$psJobsPathInScheduler = "\Microsoft\Windows\PowerShell\ScheduledJobs";
+$settings = New-ScheduledTaskSettingsSet
+$settings.Priority = 4
+Set-ScheduledTask -TaskPath $psJobsPathInScheduler -TaskName "WSC2024_DOMAINJOIN" -Principal $principal -Settings $settings
+
+# CSV file
+Write-Host "CSV file download"
+New-Item -ItemType Directory -Force -Path 'C:\data' | Out-Null
+$ProgressPreference = 'SilentlyContinue'
+Invoke-WebRequest -Uri $Env:PACKER_HTTP_ADDR/popular_influencers.csv -OutFile "C:\data\popular_influencers.csv"
+
+# Instal notepad++
+choco install notepadplusplus -y
+choco install winscp -y
+choco install putty -y

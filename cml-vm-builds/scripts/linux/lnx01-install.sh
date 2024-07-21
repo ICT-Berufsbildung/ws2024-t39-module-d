@@ -133,7 +133,7 @@ mkdir /opt/customers-sync
 mkdir /data
 cat >/opt/customers-sync/sync.sh <<'EOF'
 #!/bin/bash
-wget --timeout=10 --tries=1 -O /data/customers.csv ftp://wsc2024:Skill39@Lyon@partner01.your-partner.com/customers.csv
+wget --timeout=10 --tries=1 -O /data/customers.csv --user wsc2024 --password Skill39@Lyon ftp://partner01.your-partner.com/customers.csv
 EOF
 
 chmod +x /opt/customers-sync/sync.sh

@@ -87,3 +87,8 @@ a2ensite uvdesk
 a2dissite 000-default
 a2enmod rewrite
 systemctl restart apache2
+
+su - appadmin -c 'cd /var/www/html/uvdesk && php bin/console doctrine:migrations:migrate --no-interaction --quiet'
+su - appadmin -c 'cd /var/www/html/uvdesk && php bin/console doctrine:fixtures:load --append'
+su - appadmin -c 'cd /var/www/html/uvdesk && php bin/console uvdesk_wizard:defaults:create-user ROLE_SUPER_ADMIN admin admin@wsc2024.local AllTooWell13 --no-interaction'
+

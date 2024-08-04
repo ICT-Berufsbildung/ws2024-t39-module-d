@@ -1,0 +1,76 @@
+from,name,subject,message
+jimenez@wsc2024.local,Adele Jimenez,TSHOOT Ticket 1,"Dear support,
+
+Today is a special day for me because I brought my dog for the first time to the office. My coworkers in the marketing department were excited to see him. 
+
+Before I did the round tour with my dog in the office, I turned on my workstation, ws02. After I got back from the round tour, I wanted to start work and launched my internet browser, but I couldn’t open any web pages like http://app.wsc2024.local. Could you please help me?"
+dominguez@wsc2024.local,Rooney Dominguez,TSHOOT Ticket 2,"SUPER IMPORTANT, an extremely critical synchronization job, called “partner-sync” on <strong>lnx01</strong> server is not running every 15 minutes anymore and is unable to retrieve any data after a change by a junior system engineer!!!! This job downloads mission-critical data from our partner via FTP.
+
+This needs to be fixed As Soon As Possible! The error message from the job says “failed: Connection timed out”"
+page@wsc2024.local,Roary Page,TSHOOT Ticket 3,"Hi mate, 
+
+I did a software upgrade on HQRTR01 and assumed that HQRTR02 would take over. However, all workstations experienced an outage and couldn’t connect to the domain controller. Management wants to know the root cause by the end of the day. 
+
+Can you find out why HQRTR02 didn’t take over the traffic?"
+martinez@wsc2024.local,Craig Martinez,TSHOOT Ticket 4,"Hello, my newly created GPO called “WSC2024_DO_NOT_ALLOW_REGEDIT” is not applied to users at the finance department. 
+
+I noticed that ws01 doesn't apply the new GPO. Please have a look, why this GPO is not applied."
+moss@wsc2024.local,Brendan Moss,TSHOOT Ticket 5,"Our team is having trouble connecting to the HQRTR02 over SSH using IPv6 over its loopback interface from lnx01. 
+
+We are currently attempting with the admin user. Can you please have a look into it?"
+french@wsc2024.local,Haviva French,TSHOOT Ticket 6,"Dear Sir or madam, 
+
+I am having trouble connecting to lnx01 over SSH with my local user account, john with Skills39 as the password, from lnx03. I tried to login locally over Console too, I am not able to login. I’m sure the password is correct."
+carter@wsc2024.local,Kylie Carter,TSHOOT Ticket 7,"Dear support team, 
+
+my name is Kyle Carter. I am currently employed in the finance department and working on my computer ws01. I am experiencing difficulty in accessing and editing any files on the departmental file share located on dc01. The network share is mapped as letter Z on my computer ws01. 
+I already asked your colleague and he told me that he will check but never let me know when he can resolve the issue. 
+
+Please help me resolve this issue by end of today! I have a super important deadline!"
+hull@wsc2024.local,William Hull,TSHOOT Ticket 8,"Hi support, it’s William from the finance department. 
+
+My colleague advised me to enter www.wsc2024.org into the browser from ws01 to access our public webpage running on lnx01. My colleague told me I should be able to see a “Welcome to WSC2024.org” message. However, I am unable to access the site at all! 
+Your internet sucks!
+
+Best regards,
+William Hull"
+martinez@wsc2024.local,Craig Martinez,TSHOOT Ticket 9,"Hi guys, 
+
+I followed a tutorial from the internet and completely messed up lnx02 after following it! I am no longer able to log in to our server lnx02 with any user. 
+The root account isn’t working as well! I don’t get any password prompts. Moreover, the lnx02 is not accessible through IPv6 at all.
+
+Please HELP!!
+
+TIP) It is recommended to utilize both access options in CML, namely VNC and Serial. Grub will exclusively display its output through VNC, and Linux kernel will alter the output to serial during boot."
+hogan@wsc2024.local,Shea Hogan,TSHOOT Ticket 10,"Hi guys, I am testing a new application. For that purpose, I have overwritten the domain resolution by adding a new entry in the hosts file on lnx03. 
+If I attempt to curl the domain app.wsc2024.org on lnx03 using the command ""curl -L app.wsc2024.org"", it is expected to land on lnx03 and not on lnx01. I should receive a text similar to “Welcome to the NEW webpage of WSC2024.org”. But my domain resolution overwrite is not working at all. 
+
+What am I doing wrong?"
+hogan@wsc2024.local,Shea Hogan,TSHOOT Ticket 11,"Greetings, 
+I am attempting to access my new secret webpage http://app.wsc2024.local:8080 from ws01. The website should return a website containing “Welcome to Secret app at WSC2024.org”. However, I am receiving the webpage running on port 80 with the content “Welcome to WSC2024.org.”, which I don’t expect from port 8080. 
+
+As the web application is still under development, I don’t want anybody to access the site using default port 80. Please help me to resolve the issue."
+weiss@wsc2024.local,Nigel Weiss,TSHOOT Ticket 12,"Dear Sir or madam, 
+
+my name is Nigel and I’m from Marketing department. Since yesterday, I cannot copy my file on ws01 called C:\data\popular_influencers.csv to the marketing file share when I sign in using my account. 
+The marketing group share is mapped as network drive Z: on my computer ws01.
+
+There is another problem as well. I have just discovered that other members from the marketing department can see the confidential project folder “PROJECT_ALPHA” located in the marketing share. However, they cannot access it, which is fine. 
+It is confidential, so please make sure this folder is not listed in the Windows Explorer for them.
+
+Best regards,
+Nigel Weiss"
+moss@wsc2024.local,Brendan Moss,TSHOOT Ticket 13,"Hi pal, 
+lnx03 is having trouble pinging 8.8.8.8 since yesterday. I am really busy. 
+
+Can you please take over this issue for me and have a look?"
+moss@wsc2024.local,Brendan Moss,TSHOOT Ticket 14,"Hi there, 
+I am evaluating a new router model in our lab. I have connected the new lab router named LABRTR01 to our core router, CORERTR01, and configured the most important things on both of them to get IPv6-only connectivity. But I am unable to ping 2001:DB8:CAFE:254::14. 
+
+I have spent many hours trying to troubleshoot this issue, and I am still not sure where to look."
+page@wsc2024.local,Roary Page,TSHOOT Ticket 15,"Hello, I am a PowerShell developer and last week I have heard that there is a new version of Powershell. I think the newest version is called Powershell 7. 
+Yesterday, I was playing around on my machine ws01 using the sysop local account and now I can no longer start pwsh.exe anywhere from cmd anymore, instead, I need to start the pwsh.exe from C:\Program Files\Powershell\7 folder instead. Can you resolve this problem? 
+
+By the way, I met in the morning my colleague Reese Terry from the night shift and she complained that she was unable to work last night on ws01 as she was unable to login. Due to this reason, she instead dealt with the paperwork throughout the entire night. 
+
+Could check this issue as well before she starts her night shift again?"

@@ -37,8 +37,8 @@ variable "esx_vm_network" {
 }
 
 source "vsphere-iso" "base" {
-  CPUs         = 2
-  RAM          = 2048
+  CPUs         = 4
+  RAM          = 8192
   boot_command = [
     "<esc><wait>",
     "auto url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/preseed-sc.cfg interface=ens192<wait>", "<enter><wait>"
@@ -52,6 +52,10 @@ source "vsphere-iso" "base" {
   iso_paths            = [
     "[${var.esx_iso_datastore}] ISO/debian-12.5.0-amd64-netinst.iso"
   ]
+  export {
+      output_format = "ova"
+      output_directory = "./outputs"
+  }
   password             = var.esx_password
   ssh_password         = "AllTooWell13"
   ssh_username         = "sysop"
@@ -69,14 +73,49 @@ source "vsphere-iso" "base" {
 
 # Servicedesk
 build {
-  name = "Servicedesk"
   sources = ["source.vsphere-iso.base"]
   source "source.vsphere-iso.base" {
-    vm_name = "Servicedesk"
+    name = "prod"
+    vm_name = "wsc2024-mod-d-helpdesk"
     network_adapters {
       network_card = "vmxnet3"
       network = var.esx_vm_network
     }
+  }
+
+  source "source.vsphere-iso.base" {
+    name = "familiarization"
+    vm_name = "wsc2024-mod-d-helpdesk-familiarization"
+    network_adapters {
+      network_card = "vmxnet3"
+      network = var.esx_vm_network
+    }
+  }
+
+  provisioner "file" {
+    sources = [
+      "./http/Agents.php",
+      "./http/users.csv",
+      "./http/saved_reply.sql",
+      "./http/SavedRepliesHomepage.php",
+      "./http/SavedRepliesPanel.php",
+      "./http/SavedRepliesSearch.php",
+      "./http/SavedReplies.php",
+      "./scripts/linux/uvdesk-import.py"
+    ]
+    destination = "/tmp/"
+  }
+
+  provisioner "file" {
+    only   = ["prod"]
+    source = "./http/tickets_prod.csv"
+    destination = "/tmp/tickets.csv"
+  }
+
+  provisioner "file" {
+    only   = ["familiarization"]
+    source = "./http/tickets_familiarization.csv"
+    destination = "/tmp/tickets.csv"
   }
 
   provisioner "shell" {

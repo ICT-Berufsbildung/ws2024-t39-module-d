@@ -107,13 +107,13 @@ build {
   }
 
   provisioner "file" {
-    only   = ["prod"]
+    only   = ["vsphere-iso.prod"]
     source = "./http/tickets_prod.csv"
     destination = "/tmp/tickets.csv"
   }
 
   provisioner "file" {
-    only   = ["familiarization"]
+    only   = ["vsphere-iso.familiarization"]
     source = "./http/tickets_familiarization.csv"
     destination = "/tmp/tickets.csv"
   }

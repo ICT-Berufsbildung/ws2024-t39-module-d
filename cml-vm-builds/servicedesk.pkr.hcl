@@ -101,6 +101,7 @@ build {
       "./http/SavedRepliesPanel.php",
       "./http/SavedRepliesSearch.php",
       "./http/SavedReplies.php",
+      "./http/ticket.html.twig",
       "./scripts/linux/uvdesk-import.py"
     ]
     destination = "/tmp/"

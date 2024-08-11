@@ -45,6 +45,7 @@ cp /tmp/SavedRepliesSearch.php /var/www/html/uvdesk/vendor/uvdesk/core-framework
 cp /tmp/SavedRepliesHomepage.php /var/www/html/uvdesk/vendor/uvdesk/core-framework/UIComponents/Dashboard/Homepage/Items/SavedReplies.php
 cp /tmp/SavedRepliesPanel.php /var/www/html/uvdesk/vendor/uvdesk/core-framework/UIComponents/Dashboard/Panel/Items/Productivity/SavedReplies.php
 cp /tmp/SavedReplies.php /var/www/html/uvdesk/vendor/uvdesk/core-framework/Controller/SavedReplies.php
+cp /tmp/ticket.html.twig /var/www/html/uvdesk/vendor/uvdesk/core-framework/Resources/views/ticket.html.twig
 
 chown -R www-data:www-data /var/www/html/uvdesk
 chmod -R 775 /var/www/html/uvdesk
